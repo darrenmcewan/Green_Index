@@ -7,7 +7,7 @@ st.header("Demo App for Wind Visualizations")
 st.subheader("Showcasing potential wind farm locations")
 
 filepath = "wtk_site_metadata.csv"
-USbounds = [5.499550, -167.276413,83.162102, -52.233040]
+USbounds = [-124.848974, 24.396308,-66.885444, 49.384358]
 
 m = leafmap.Map()
 m.add_heatmap(
