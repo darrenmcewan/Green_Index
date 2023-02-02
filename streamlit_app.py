@@ -1,16 +1,16 @@
 import streamlit as st
-import leafmap.foliumap as fleafmap
+import leafmap.foliumap as leafmap
 
 st.header("Demo App for Wind Visualizations")
 st.subheader("Showcasing potential wind farm locations")
 
-m = fleafmap.Map(locate_control=True)
+m = leafmap.Map(locate_control=True)
 m.add_basemap("ROADMAP")
 m.to_streamlit(height=700)
 
 
 filepath = "https://github.com/darrenmcewan/Wind_visualization/blob/main/wtk_site_metadata.csv"
-import leafmap.leafmap as leafmap
+
 m = leafmap.Map()
 m.add_basemap("Stamen.Toner")
 m.add_heatmap(
