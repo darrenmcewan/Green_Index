@@ -23,7 +23,7 @@ m.add_heatmap(
     latitude="latitude",
     longitude='longitude',
     value="capacity_factor",
-    name="Wind Speed",
+    name="Capacity Factor",
     radius=20
 )
 m.zoom_to_bounds(USbounds)
