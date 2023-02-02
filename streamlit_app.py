@@ -15,7 +15,15 @@ m.add_heatmap(
     latitude="latitude",
     longitude='longitude',
     value="wind_speed",
-    name="Heat map",
+    name="Wind Speed",
+    radius=20
+)
+m.add_heatmap(
+    filepath,
+    latitude="latitude",
+    longitude='longitude',
+    value="capacity_factor",
+    name="Wind Speed",
     radius=20
 )
 m.zoom_to_bounds(USbounds)
