@@ -4,7 +4,7 @@ import leafmap.foliumap as leafmap
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 st.header("Demo App for Wind Visualizations")
-st.text("Quick demo that utilizes wind data from https://data.nrel.gov/submissions/54 and leafmap")
+st.write("Quick demo that utilizes wind data from [The National Renewable Energy Laboratory (NREL)](https://data.nrel.gov/submissions/) and leafmap to visualize")
 
 filepath = "wtk_site_metadata.csv"
 USbounds = [-124.848974, 24.396308,-66.885444, 49.384358]
