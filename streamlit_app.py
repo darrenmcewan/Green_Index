@@ -7,10 +7,7 @@ st.header("Demo App for Wind Visualizations")
 st.subheader("Showcasing potential wind farm locations")
 
 filepath = "wtk_site_metadata.csv"
-maxBounds = [
-    [5.499550, -167.276413], 
-    [83.162102, -52.233040] 
-];
+USbounds = ((5.499550, -167.276413),(83.162102, -52.233040))
 
 m = leafmap.Map()
 m.add_heatmap(
@@ -19,7 +16,7 @@ m.add_heatmap(
     longitude='longitude',
     value="wind_speed",
     name="Heat map",
-    radius=20,
-    maxBounds=maxBounds
+    radius=20
 )
+m.zoom_to_bounds(USbounds)
 m.to_streamlit(height=700)
