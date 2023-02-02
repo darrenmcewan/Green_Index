@@ -29,3 +29,4 @@ m.add_heatmap(
 )
 m.zoom_to_bounds(USbounds)
 m.to_streamlit(height=700)
+m.save_draw_features('features.txt')
