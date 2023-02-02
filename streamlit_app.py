@@ -1,9 +1,9 @@
 import streamlit as st
-import leafmap
+import leafmap.foliumap as leafmap
 
 st.header("Demo App for Wind Visualizations")
 st.subheader("Showcasing potential wind farm locations")
 
-m = leafmap.Map(minimap_control=True)
-m.add_basemap("OpenTopoMap")
-m.to_streamlit(height=500)
+m = leafmap.Map(locate_control=True)
+m.add_basemap("ROADMAP")
+m.to_streamlit(height=700)
