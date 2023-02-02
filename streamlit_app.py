@@ -9,7 +9,7 @@ m.add_basemap("ROADMAP")
 m.to_streamlit(height=700)
 
 
-filepath = "https://github.com/darrenmcewan/Wind_visualization/blob/main/wtk_site_metadata.csv"
+filepath = "wtk_site_metadata.csv"
 
 m = leafmap.Map()
 m.add_basemap("Stamen.Toner")
