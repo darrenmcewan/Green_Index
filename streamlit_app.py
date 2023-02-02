@@ -24,7 +24,8 @@ m.add_heatmap(
     longitude='longitude',
     value="capacity_factor",
     name="Capacity Factor",
-    radius=20
+    radius=20,
+    add_legend=True
 )
 m.zoom_to_bounds(USbounds)
 m.to_streamlit(height=700)
