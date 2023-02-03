@@ -6,8 +6,10 @@ import pandas as pd
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 st.header("Demo App for Wind Visualizations")
 st.write("Quick demo that utilizes wind data from [The National Renewable Energy Laboratory (NREL)](https://data.nrel.gov/submissions/) and leafmap to visualize")
-
 filepath = "wtk_site_metadata.csv"
+
+st.download_button("Download wind csv here 💨", filepath,file_name="wind.csv")
+
 USbounds = [-124.848974, 24.396308,-66.885444, 49.384358]
 
 df = pd.read_csv(filepath, sep=",")
