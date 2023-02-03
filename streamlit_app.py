@@ -10,7 +10,7 @@ st.write("Quick demo that utilizes wind data from [The National Renewable Energy
 filepath = "wtk_site_metadata.csv"
 USbounds = [-124.848974, 24.396308,-66.885444, 49.384358]
 
-df = pd.read_csv(filepath, sep=",", header=True)
+df = pd.read_csv(filepath, sep=",")
 
 windspeed_df = df.filter(items=['latitude','longitude','wind_speed'])
 capacity_factor_df = df.filter(items=['latitude','longitude','capacity_factor'])
