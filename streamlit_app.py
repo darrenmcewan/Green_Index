@@ -103,12 +103,12 @@ if state:
     m.zoom_to_bounds(stateBounds[state])
 else:
     m.zoom_to_bounds(USbounds)
+m.save_draw_features('polygon.txt', indent=4)
 m.to_streamlit(height=700)
 
+with open('polygon.txt',"w") as f:
+    f.readlines()
 
 
 
-
-with col1:
-    st.dataframe(windspeed_df)
 
