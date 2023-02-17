@@ -25,7 +25,7 @@ with col2:
 with col3:
     energy_type = st.selectbox("Energy Type", energytype)
 
-USbounds = [-124.848974,  49.384358]
+USbounds = [-124.848974, 24.396308, -66.885444, 49.384358]
 
 df = pd.read_csv(filepath, sep=",")
 
