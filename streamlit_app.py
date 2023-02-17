@@ -106,12 +106,6 @@ with col1:
         m.zoom_to_bounds(USbounds)
     m.to_streamlit(height=700)
 with col2:
-    st.dataframe(windspeed_df)
-
-st.header("Capacity Factor")
-
-col1, col2 = st.columns(2)
-with col1:
     m = leafmap.Map()
     m.add_heatmap(
         filepath,
@@ -126,5 +120,13 @@ with col1:
     else:
         m.zoom_to_bounds(USbounds)
     m.to_streamlit(height=700)
+
+
+
+
+col1, col2 = st.columns(2)
+with col1:
+    st.dataframe(windspeed_df)
+
 with col2:
     st.dataframe(capacity_factor_df)
