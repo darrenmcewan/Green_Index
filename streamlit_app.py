@@ -19,11 +19,11 @@ states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
 energytype = ['Biomass', 'Geothermal', 'Hydropower', 'Solor', 'Wind']
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.selectbox("Country", countries)
+    st.selectbox("Country", countries, help="Only the United States is currently supported")
 with col2:
-    state = st.selectbox("States", states)
+    state = st.selectbox("States", states, help="Select a state to zoom in on")
 with col3:
-    energy_type = st.selectbox("Energy Type", energytype)
+    energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
 
 USbounds = [-124.848974, 24.396308, -66.885444, 49.384358]
 stateBounds = {"AL": [-88.473227, 30.223334, -84.88908, 35.008028],
