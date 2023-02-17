@@ -21,11 +21,11 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.selectbox("Country", countries)
 with col2:
-    st.selectbox("States", states)
+    country = st.selectbox("States", states)
 with col3:
-    st.selectbox("Energy Type", energytype)
+    energy_type = st.selectbox("Energy Type", energytype)
 
-USbounds = [-124.848974, 24.396308, -66.885444, 49.384358]
+USbounds = [-124.848974,  49.384358]
 
 df = pd.read_csv(filepath, sep=",")
 
