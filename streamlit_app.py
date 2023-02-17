@@ -100,7 +100,10 @@ with col1:
         name="Wind Speed",
         radius=20
     )
-    m.zoom_to_bounds(stateBounds[state])
+    if state:
+        m.zoom_to_bounds(stateBounds[state])
+    else:
+        m.zoom_to_bounds(USbounds)
     m.to_streamlit(height=700)
 with col2:
     st.dataframe(windspeed_df)
@@ -118,7 +121,10 @@ with col1:
         name="Capacity Factor",
         radius=20
     )
-    m.zoom_to_bounds(stateBounds[state])
+    if state:
+        m.zoom_to_bounds(stateBounds[state])
+    else:
+        m.zoom_to_bounds(USbounds)
     m.to_streamlit(height=700)
 with col2:
     st.dataframe(capacity_factor_df)
