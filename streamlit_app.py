@@ -89,44 +89,26 @@ df = pd.read_csv(filepath, sep=",")
 windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
 capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
 st.header("Wind Speed")
-col1, col2 = st.columns(2)
-with col1:
-    m = leafmap.Map()
-    m.add_heatmap(
-        filepath,
-        latitude="latitude",
-        longitude='longitude',
-        value="wind_speed",
-        name="Wind Speed",
-        radius=20
-    )
-    if state:
-        m.zoom_to_bounds(stateBounds[state])
-    else:
-        m.zoom_to_bounds(USbounds)
-    m.to_streamlit(height=700)
-with col2:
-    m = leafmap.Map()
-    m.add_heatmap(
-        filepath,
-        latitude="latitude",
-        longitude='longitude',
-        value="capacity_factor",
-        name="Capacity Factor",
-        radius=20
-    )
-    if state:
-        m.zoom_to_bounds(stateBounds[state])
-    else:
-        m.zoom_to_bounds(USbounds)
-    m.to_streamlit(height=700)
+
+m = leafmap.Map()
+m.add_heatmap(
+    filepath,
+    latitude="latitude",
+    longitude='longitude',
+    value="wind_speed",
+    name="Wind Speed",
+    radius=20
+)
+if state:
+    m.zoom_to_bounds(stateBounds[state])
+else:
+    m.zoom_to_bounds(USbounds)
+m.to_streamlit(height=700)
 
 
 
 
-col1, col2 = st.columns(2)
+
 with col1:
     st.dataframe(windspeed_df)
 
-with col2:
-    st.dataframe(capacity_factor_df)
