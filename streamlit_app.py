@@ -113,7 +113,6 @@ Draw(
     },
 ).add_to(m)
 folium.TileLayer('cartodbpositron').add_to(m)
-folium.TileLayer('stamentoner').add_to(m)
 #m.add_heatmap(
 #    filepath,
 #    latitude="latitude",
@@ -122,12 +121,13 @@ folium.TileLayer('stamentoner').add_to(m)
 #    name="Wind Speed",
 #    radius=20
 #)
-if state:
-    m.fit_bounds([[stateBounds[state][0],stateBounds[state][1]],[stateBounds[state][2],stateBounds[state][3]]])
-else:
-    m.fit_bounds(USbounds)
+#if state:
+#    m.fit_bounds([[stateBounds[state][0],stateBounds[state][1]],[stateBounds[state][2],stateBounds[state][3]]])
+#else:
+#    m.fit_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
-if output['all_drawings'][0]:
-    for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
-        st.write(i)
+if output:
+    if output["all_drawings"] is not None:
+        for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
+            st.write(i)
