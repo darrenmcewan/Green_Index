@@ -1,3 +1,2 @@
 [server]
 fileWatcherType = "poll"
-enableWebsocketCompression = false
