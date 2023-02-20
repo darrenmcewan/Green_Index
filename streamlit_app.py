@@ -5,7 +5,9 @@ from folium.plugins import Draw
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
-st.header("Demo App for Wind Visualizations")
+original_title = '<h1>The </h1> <h1 style="font-family:Courier; color:Green;">Green</h1> <h1> Solution</h1>'
+st.markdown(original_title, unsafe_allow_html=True)
+
 st.write(
     "Quick demo that utilizes wind data from [The National Renewable Energy Laboratory (NREL)](https://data.nrel.gov/submissions/) and leafmap to visualize")
 filepath = "wtk_site_metadata.csv"
@@ -26,6 +28,17 @@ with col2:
     state = st.selectbox("States", states, help="Select a state to zoom in on")
 with col3:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
+
+with st.sidebar.container():
+    st.markdown(
+        f"""
+        # Getting Started 
+        1. Click the black polygon on the map
+        2. Select the desired locations to analyze various renewable energy options
+        3. Optional: Apply customizations
+        """,
+        unsafe_allow_html=True,
+    )
 
 USbounds = [[-124.848974, 24.396308], [-66.885444, 49.384358]]
 stateBounds = {"AL": [-88.473227, 30.223334, -84.88908, 35.008028],
@@ -109,22 +122,10 @@ Draw(
         "polygon": True,
         "marker": False,
         "circlemarker": False,
-        "rectangle": True,
+        "rectangle": False,
     },
 ).add_to(m)
 folium.TileLayer('cartodbpositron').add_to(m)
-#m.add_heatmap(
-#    filepath,
-#    latitude="latitude",
-#    longitude='longitude',
-#    value="wind_speed",
-#    name="Wind Speed",
-#    radius=20
-#)
-#if state:
-#    m.fit_bounds([[stateBounds[state][0],stateBounds[state][1]],[stateBounds[state][2],stateBounds[state][3]]])
-#else:
-#    m.fit_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
 if output:
