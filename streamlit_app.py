@@ -1,8 +1,7 @@
 import folium
+import pandas as pd
 import streamlit as st
 from folium.plugins import Draw
-import pandas as pd
-
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 st.header("Demo App for Wind Visualizations")
@@ -92,7 +91,7 @@ windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
 capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
 st.header("Wind Speed")
 
- m = folium.Map()
+m = folium.Map()
 m.add_heatmap(
     filepath,
     latitude="latitude",
@@ -120,8 +119,3 @@ Draw(
 ).add_to(m)
 output = st_folium(m, key="init", width=1000, height=600)
 output
-
-
-
-
-
