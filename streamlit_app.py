@@ -1,6 +1,8 @@
-import leafmap.foliumap as leafmap
-import pandas as pd
+import folium
 import streamlit as st
+from folium.plugins import Draw
+import pandas as pd
+
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 st.header("Demo App for Wind Visualizations")
@@ -90,7 +92,7 @@ windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
 capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
 st.header("Wind Speed")
 
-m = leafmap.Map()
+ m = folium.Map()
 m.add_heatmap(
     filepath,
     latitude="latitude",
@@ -103,8 +105,21 @@ if state:
     m.zoom_to_bounds(stateBounds[state])
 else:
     m.zoom_to_bounds(USbounds)
-m.save_draw_features('polygon.geojson', indent=4)
-m.to_streamlit(height=700)
+Draw(
+    export=False,
+    position="topleft",
+    draw_options={
+        "polyline": False,
+        "poly": False,
+        "circle": False,
+        "polygon": True,
+        "marker": False,
+        "circlemarker": False,
+        "rectangle": True,
+    },
+).add_to(m)
+output = st_folium(m, key="init", width=1000, height=600)
+output
 
 
 
