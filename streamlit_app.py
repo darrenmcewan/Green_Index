@@ -55,13 +55,13 @@ with col2:
                 st.write(i)
 with col3:
     chart_data = pd.DataFrame(
-        np.random.randn(5, 1),
-        columns=["a", "b", "c"])
+        np.random.randn(1, 5),
+        columns=["Solar", "Wind", "Hydro", "Biomas","Geothermal"])
     st.write("Average Annual Power Production")
     st.bar_chart(chart_data)
 
     chart_data = pd.DataFrame(
-        np.random.randn(5, 1),
+        np.random.randn(1, 5),
         columns=["Solar", "Wind", "Hydro", "Biomas","Geothermal"])
     st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
     st.bar_chart(chart_data, x="Simulation #", y="LCOE")
