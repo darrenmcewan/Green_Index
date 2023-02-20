@@ -56,14 +56,14 @@ with col2:
 with col3:
 
     chart_data = pd.DataFrame(
-        {'lab': ["Solar", "Wind", "Hydro", "Biomas","Geothermal"], 'val': np.random.randint(130,size=5)})
+        {'Resource Type': ["Solar", "Wind", "Hydro", "Biomas","Geothermal"], 'kw/year': np.random.randint(130,size=5)})
     st.write("Average Annual Power Production")
-    st.bar_chart(chart_data, x='lab', y='val')
+    st.bar_chart(chart_data, x='Resource Type', y='kw/year')
 
     chart_data = pd.DataFrame(
-        {'lab': ["Solar", "Wind", "Hydro", "Biomas", "Geothermal"], 'val': np.random.randint(130, size=5)})
+        {'Resource Type': ["Solar", "Wind", "Hydro", "Biomas", "Geothermal"], 'LCOE': np.random.randint(130, size=5)})
     st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
-    st.bar_chart(chart_data, x='lab', y='val')
+    st.bar_chart(chart_data, x='Resource Type', y='LCOE')
 
 
 with st.sidebar.container():
