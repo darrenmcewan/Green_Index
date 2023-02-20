@@ -2,3 +2,4 @@ leafmap
 streamlit
 pandas
 folium
+inotify
