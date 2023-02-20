@@ -127,4 +127,6 @@ Draw(
 #    m.zoom_to_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
-output['all_drawings'][0]
+if output['all_drawings'][0]:
+    for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
+        st.write(i)
