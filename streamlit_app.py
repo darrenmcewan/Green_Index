@@ -54,17 +54,16 @@ with col2:
             for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
                 st.write(i)
 with col3:
+
     chart_data = pd.DataFrame(
-        np.random.randn(1, 5),
-        columns=["Solar", "Wind", "Hydro", "Biomas","Geothermal"])
+        {'lab': ["Solar", "Wind", "Hydro", "Biomas","Geothermal"], 'val': np.random.randint(130,size=5)})
     st.write("Average Annual Power Production")
     st.bar_chart(chart_data)
 
     chart_data = pd.DataFrame(
-        np.random.randn(1, 5),
-        columns=["Solar", "Wind", "Hydro", "Biomas","Geothermal"])
+        {'lab': ["Solar", "Wind", "Hydro", "Biomas", "Geothermal"], 'val': np.random.randint(130, size=5)})
     st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
-    st.bar_chart(chart_data, x="Simulation #", y="LCOE")
+    st.bar_chart(chart_data)
 
 
 with st.sidebar.container():
