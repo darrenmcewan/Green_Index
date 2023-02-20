@@ -22,7 +22,9 @@ states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 energytype = ['Biomass', 'Geothermal', 'Hydropower', 'Solor', 'Wind']
-col1, col2, col3 = st.columns(3)
+
+
+col1, col2, col3 = st.columns([1,3,2])
 with col1:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
 with col2:
@@ -132,10 +134,10 @@ stateBounds = {"AL": [-88.473227, 30.223334, -84.88908, 35.008028],
                "WY": [-111.056888, 40.994746, -104.05216, 45.005904]
                }
 
-df = pd.read_csv(filepath, sep=",")
+#df = pd.read_csv(filepath, sep=",")
 
-windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
-capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
+#windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
+#capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
 #st.header("Wind Speed")
 
 
