@@ -8,6 +8,22 @@ import numpy as np
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=display:inline;style=text-align: center;font-family:Courier; color:Green;>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
+col1,col2,col3,col4,col5 = st.columns(5)
+with col1:
+    st.write("Wind")
+    st.image("images/wind.JPG")
+with col2:
+    st.write("Hydro")
+    st.image("images/hydro.JPG")
+with col3:
+    st.write("Solar")
+    st.image("images/solar.JPG")
+with col4:
+    st.write("Biomass")
+    st.image("images/biomass.JPG")
+with col5:
+    st.write("Geothermal")
+    st.image("images/geothermal.JPG")
 
 st.write(
     "👈 View the sidebar for help on getting started\n\n\n\n")
@@ -97,4 +113,4 @@ with col4:
     st.markdown(f"## Incentives for solar in {state}:")
 
 
-
+#https://stackoverflow.com/questions/69409255/how-to-get-city-state-and-country-from-a-list-of-latitude-and-longitude-coordi
