@@ -1,2 +1,6 @@
 [server]
 fileWatcherType = "poll"
+enableWebsocketCompression = false
+
+[browser]
+gatherUsageStats = false
