@@ -6,7 +6,7 @@ from streamlit_folium import st_folium
 import numpy as np
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
-original_title = '<h1 style=display:inline;style=text-align: center;font-family:Courier; color:Green;>The Green Solution</h1>'
+original_title = '<h1 style=text-align: center;font-family:Courier; color:Green;>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 col1,col2,col3,col4,col5 = st.columns(5)
 with col1:
@@ -44,7 +44,7 @@ with col1:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
 with col2:
     m = folium.Map(
-        location=[36.87962060502676, -460.01953125000006],
+        location=[41.112469, -462.216797],
         zoom_start=4,
         control_scale=True,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
