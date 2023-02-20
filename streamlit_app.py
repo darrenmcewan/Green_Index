@@ -113,18 +113,18 @@ Draw(
         "rectangle": True,
     },
 ).add_to(m)
-m.add_heatmap(
-    filepath,
-    latitude="latitude",
-    longitude='longitude',
-    value="wind_speed",
-    name="Wind Speed",
-    radius=20
-)
-if state:
-    m.zoom_to_bounds(stateBounds[state])
-else:
-    m.zoom_to_bounds(USbounds)
+#m.add_heatmap(
+#    filepath,
+#    latitude="latitude",
+#    longitude='longitude',
+#    value="wind_speed",
+#    name="Wind Speed",
+#    radius=20
+#)
+#if state:
+#    m.zoom_to_bounds(stateBounds[state])
+#else:
+#    m.zoom_to_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
 output
