@@ -81,8 +81,8 @@ with st.sidebar.container():
 
 col1,col2,col3,col4 = st.columns(4)
 col1.metric(label="Best resource", value="Solar")
-col1.metric(label="Best Investment", value="Wind")
-col1.metric(label=f"Incentives for solar in:", value=f"{state}")
-col1.metric(label=f"Restrictions for solor in:", value=f"{state}")
+col2.metric(label="Best Investment", value="Wind")
+col3.metric(label=f"Incentives for solar in:", value=f"{state}")
+col4.metric(label=f"Restrictions for solor in:", value=f"{state}")
 
 
