@@ -3,16 +3,17 @@ import pandas as pd
 import streamlit as st
 from folium.plugins import Draw
 from streamlit_folium import st_folium
+import numpy as np
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=display:inline;>The </h1> <h1 style="font-family:Courier; color:Green;display:inline;">Green</h1> <h1 style=display:inline;> Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 
 st.write(
-    "Quick demo that utilizes wind data from [The National Renewable Energy Laboratory (NREL)](https://data.nrel.gov/submissions/) and leafmap to visualize")
-filepath = "wtk_site_metadata.csv"
+    "👈 View the sidebar for help on getting started")
 
-st.download_button("Download wind csv here 💨", filepath, file_name="wind.csv")
+#filepath = "wtk_site_metadata.csv"
+#st.download_button("Download wind csv here 💨", filepath, file_name="wind.csv")
 
 countries = ['USA']
 states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
@@ -23,11 +24,41 @@ states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
 energytype = ['Biomass', 'Geothermal', 'Hydropower', 'Solor', 'Wind']
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.selectbox("Country", countries, help="Only the United States is currently supported")
-with col2:
-    state = st.selectbox("States", states, help="Select a state to zoom in on")
-with col3:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
+with col2:
+    m = folium.Map(
+        location=[36.87962060502676, -460.01953125000006],
+        zoom_start=4,
+        control_scale=True,
+        attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    )
+    Draw(
+        export=False,
+        position="topleft",
+        draw_options={
+            "polyline": False,
+            "poly": False,
+            "circle": False,
+            "polygon": True,
+            "marker": False,
+            "circlemarker": False,
+            "rectangle": False,
+        },
+    ).add_to(m)
+    folium.TileLayer('cartodbpositron').add_to(m)
+
+    output = st_folium(m, key="init", width=1000, height=600)
+    if output:
+        if output["all_drawings"] is not None:
+            for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
+                st.write(i)
+with col3:
+    chart_data = pd.DataFrame(
+        np.random.randn(20, 3),
+        columns=["a", "b", "c"])
+
+    st.bar_chart(chart_data)
+
 
 with st.sidebar.container():
     st.markdown(
@@ -39,6 +70,8 @@ with st.sidebar.container():
         """,
         unsafe_allow_html=True,
     )
+    st.selectbox("Country", countries, help="Only the United States is currently supported")
+    state = st.selectbox("States", states, help="Select a state to zoom in on")
 
 USbounds = [[-124.848974, 24.396308], [-66.885444, 49.384358]]
 stateBounds = {"AL": [-88.473227, 30.223334, -84.88908, 35.008028],
@@ -103,32 +136,7 @@ df = pd.read_csv(filepath, sep=",")
 
 windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
 capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
-st.header("Wind Speed")
+#st.header("Wind Speed")
 
 
-m = folium.Map(
-    location=[36.87962060502676, -460.01953125000006],
-    zoom_start=4,
-    control_scale=True,
-    attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-)
-Draw(
-    export=False,
-    position="topleft",
-    draw_options={
-        "polyline": False,
-        "poly": False,
-        "circle": False,
-        "polygon": True,
-        "marker": False,
-        "circlemarker": False,
-        "rectangle": False,
-    },
-).add_to(m)
-folium.TileLayer('cartodbpositron').add_to(m)
 
-output = st_folium(m, key="init", width=1000, height=600)
-if output:
-    if output["all_drawings"] is not None:
-        for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
-            st.write(i)
