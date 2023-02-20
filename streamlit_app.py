@@ -44,7 +44,7 @@ with col1:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
 with col2:
     m = folium.Map(
-        location=[41.112469, -462.216797],
+        location=[42.747012, --461.425781],
         zoom_start=4,
         control_scale=True,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
