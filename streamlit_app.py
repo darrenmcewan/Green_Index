@@ -11,19 +11,19 @@ st.markdown(original_title, unsafe_allow_html=True)
 col1,col2,col3,col4,col5 = st.columns(5)
 with col1:
     st.write("Wind")
-    st.image("images/wind.JPG")
+    st.image("Wind_visualization/images/wind.JPG")
 with col2:
     st.write("Hydro")
-    st.image("images/hydro.JPG")
+    st.image("Wind_visualization/images/hydro.JPG")
 with col3:
     st.write("Solar")
-    st.image("images/solar.JPG")
+    st.image("Wind_visualization/images/solar.JPG")
 with col4:
     st.write("Biomass")
-    st.image("images/biomass.JPG")
+    st.image("Wind_visualization/images/biomass.JPG")
 with col5:
     st.write("Geothermal")
-    st.image("images/geothermal.JPG")
+    st.image("Wind_visualization/images/geothermal.JPG")
 
 st.write(
     "👈 View the sidebar for help on getting started\n\n\n\n")
