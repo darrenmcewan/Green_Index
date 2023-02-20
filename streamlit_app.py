@@ -113,4 +113,4 @@ with col4:
     st.markdown(f"## Incentives for solar in {state}:")
 
 
-#https://stackoverflow.com/questions/69409255/how-to-get-city-state-and-country-from-a-list-of-latitude-and-longitude-coordi
+#https://stackoverflow.com/questions/69409255/how-to-get-city-state-and-country-from-a-list-of-latitude-and-longitude-coordi#
