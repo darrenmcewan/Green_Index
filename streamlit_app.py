@@ -6,7 +6,7 @@ from streamlit_folium import st_folium
 import numpy as np
 #
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
-original_title = '<h1 style=display:inline;style=text-align: center;font-family:Courier; color:Green;>The Green Solution</h1>'
+original_title = '<h1>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 col1,col2,col3,col4,col5 = st.columns(5)
 with col1:
