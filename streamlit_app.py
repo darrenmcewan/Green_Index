@@ -2,6 +2,7 @@ import folium
 import pandas as pd
 import streamlit as st
 from folium.plugins import Draw
+from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 st.header("Demo App for Wind Visualizations")
@@ -91,19 +92,14 @@ windspeed_df = df.filter(items=['latitude', 'longitude', 'wind_speed'])
 capacity_factor_df = df.filter(items=['latitude', 'longitude', 'capacity_factor'])
 st.header("Wind Speed")
 
-m = folium.Map()
-m.add_heatmap(
-    filepath,
-    latitude="latitude",
-    longitude='longitude',
-    value="wind_speed",
-    name="Wind Speed",
-    radius=20
+
+m = folium.Map(
+    location=[-109.060253, 36.992426],
+    zoom_start=1,
+    control_scale=True,
+    tiles="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
 )
-if state:
-    m.zoom_to_bounds(stateBounds[state])
-else:
-    m.zoom_to_bounds(USbounds)
 Draw(
     export=False,
     position="topleft",
@@ -117,5 +113,18 @@ Draw(
         "rectangle": True,
     },
 ).add_to(m)
+m.add_heatmap(
+    filepath,
+    latitude="latitude",
+    longitude='longitude',
+    value="wind_speed",
+    name="Wind Speed",
+    radius=20
+)
+if state:
+    m.zoom_to_bounds(stateBounds[state])
+else:
+    m.zoom_to_bounds(USbounds)
+
 output = st_folium(m, key="init", width=1000, height=600)
 output
