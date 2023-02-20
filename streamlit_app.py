@@ -94,8 +94,8 @@ st.header("Wind Speed")
 
 
 m = folium.Map(
-    location=[-109.060253, 36.992426],
-    zoom_start=1,
+    location=[36.87962060502676, -460.01953125000006],
+    zoom_start=4,
     control_scale=True,
     tiles="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
     attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
@@ -127,4 +127,4 @@ Draw(
 #    m.zoom_to_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
-output
+output['all_drawings'][0]
