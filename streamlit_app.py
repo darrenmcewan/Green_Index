@@ -6,24 +6,24 @@ from streamlit_folium import st_folium
 import numpy as np
 #
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
-original_title = '<h1>The Green Solution</h1>'
+original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 col1,col2,col3,col4,col5 = st.columns(5)
 with col1:
     st.write("Wind")
-    st.image("Wind_visualization/images/wind.JPG")
+    st.image("images/wind.JPG")
 with col2:
     st.write("Hydro")
-    st.image("Wind_visualization/images/hydro.JPG")
+    st.image("images/hydro.JPG")
 with col3:
     st.write("Solar")
-    st.image("Wind_visualization/images/solar.JPG")
+    st.image("images/solar.JPG")
 with col4:
     st.write("Biomass")
-    st.image("Wind_visualization/images/biomass.JPG")
+    st.image("images/biomass.JPG")
 with col5:
     st.write("Geothermal")
-    st.image("Wind_visualization/images/geothermal.JPG")
+    st.image("images/geothermal.JPG")
 
 st.write(
     "👈 View the sidebar for help on getting started\n\n\n\n")
@@ -44,7 +44,7 @@ with col1:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
 with col2:
     m = folium.Map(
-        location=[41.112469, -462.216797],
+        location=[40.580585, -442.976563],
         zoom_start=4,
         control_scale=True,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
@@ -68,7 +68,8 @@ with col2:
     output = st_folium(m, key="init", width=1000, height=600)
     if output:
         if output["all_drawings"] is not None:
-            for i in output['all_drawings'][0]['geometry']['coordinates'][0]:
+            coords = output['all_drawings'][0]['geometry']['coordinates'][0]
+            for i in coords:
                 st.write(i)
 with col3:
 
