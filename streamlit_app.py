@@ -123,10 +123,9 @@ folium.TileLayer('stamentoner').add_to(m)
 #    radius=20
 #)
 if state:
-    m.zoom_to_bounds(stateBounds[state])
     m.fit_bounds([[stateBounds[state][0],stateBounds[state][1]],[stateBounds[state][2],stateBounds[state][3]]])
 else:
-    m.zoom_to_bounds(USbounds)
+    m.fit_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
 if output['all_drawings'][0]:
