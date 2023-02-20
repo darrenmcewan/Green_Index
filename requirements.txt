@@ -1,6 +1,8 @@
-streamlit
-pandas
-folium
+streamlit~=1.18.1
+pandas~=1.4.1
+folium~=0.14.0
 inotify
 streamlit-folium
-numpy
+numpy~=1.22.2
+
+Pillow~=9.3.0

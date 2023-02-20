@@ -4,6 +4,8 @@ import streamlit as st
 from folium.plugins import Draw
 from streamlit_folium import st_folium
 import numpy as np
+from PIL import Image
+
 #
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=color:green>The Green Solution</h1>'
@@ -11,19 +13,24 @@ st.markdown(original_title, unsafe_allow_html=True)
 col1,col2,col3,col4,col5 = st.columns(5)
 with col1:
     st.write("Wind")
-    st.image("images/wind.JPG")
+    image = Image.open("images/wind.JPG")
+    st.image(image)
 with col2:
     st.write("Hydro")
-    st.image("images/hydro.JPG")
+    image = Image.open("images/hydro.JPG")
+    st.image(image)
 with col3:
     st.write("Solar")
-    st.image("images/solar.JPG")
+    image = Image.open("images/solar.JPG")
+    st.image(image)
 with col4:
     st.write("Biomass")
-    st.image("images/biomass.JPG")
+    image = Image.open("images/biomass.JPG")
+    st.image(image)
 with col5:
     st.write("Geothermal")
-    st.image("images/geothermal.JPG")
+    image = Image.open("images/geothermal.JPG")
+    st.image(image)
 
 st.write(
     "👈 View the sidebar for help on getting started\n\n\n\n")
