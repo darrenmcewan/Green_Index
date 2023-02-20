@@ -82,9 +82,18 @@ with st.sidebar.container():
 col1,col2,col3,col4 = st.columns(4)
 with col1:
     st.markdown("## Best Resource")
-    col1.metric(value="Solar")
-col2.metric(label="Best Investment", value="Wind")
-col3.metric(label=f"Incentives for solar in:", value=f"{state}")
-col4.metric(label=f"Restrictions for solor in:", value=f"{state}")
+    st.markdown("- Solar")
+
+with col2:
+    st.markdown("## Best Investment")
+    st.markdown("- Wind")
+
+with col3:
+    st.markdown(f"## Incentives for solar in {state}:")
+
+
+with col4:
+    st.markdown(f"## Incentives for solar in {state}:")
+
 
 
