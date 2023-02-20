@@ -27,7 +27,7 @@ with col2:
 with col3:
     energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
 
-USbounds = [-124.848974, 24.396308, -66.885444, 49.384358]
+USbounds = [[-124.848974, 24.396308], [-66.885444, 49.384358]]
 stateBounds = {"AL": [-88.473227, 30.223334, -84.88908, 35.008028],
                "AK": [-179.148909, 51.214183, 179.77847, 71.365162],
                "AS": [-171.089874, -14.548699, -168.1433, -11.046934],
@@ -97,7 +97,6 @@ m = folium.Map(
     location=[36.87962060502676, -460.01953125000006],
     zoom_start=4,
     control_scale=True,
-    tiles="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
     attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
 )
 Draw(
@@ -113,6 +112,8 @@ Draw(
         "rectangle": True,
     },
 ).add_to(m)
+folium.TileLayer('cartodbpositron').add_to(m)
+folium.TileLayer('stamentoner').add_to(m)
 #m.add_heatmap(
 #    filepath,
 #    latitude="latitude",
@@ -121,10 +122,11 @@ Draw(
 #    name="Wind Speed",
 #    radius=20
 #)
-#if state:
-#    m.zoom_to_bounds(stateBounds[state])
-#else:
-#    m.zoom_to_bounds(USbounds)
+if state:
+    m.zoom_to_bounds(stateBounds[state])
+    m.fit_bounds([[stateBounds[state][0],stateBounds[state][1]],[stateBounds[state][2],stateBounds[state][3]]])
+else:
+    m.zoom_to_bounds(USbounds)
 
 output = st_folium(m, key="init", width=1000, height=600)
 if output['all_drawings'][0]:
