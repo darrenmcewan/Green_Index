@@ -4,7 +4,7 @@ import streamlit as st
 from folium.plugins import Draw
 from streamlit_folium import st_folium
 import numpy as np
-
+#
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=text-align: center;font-family:Courier; color:Green;>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
