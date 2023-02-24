@@ -1,56 +1,25 @@
 import streamlit as st
-import pandas as pd
-import altair as alt
-from urllib.error import URLError
+import plotly.figure_factory as ff
 
 st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
 
-st.markdown("# DataFrame Demo")
-st.sidebar.header("DataFrame Demo")
-st.write(
-    """This demo shows how to use `st.write` to visualize Pandas DataFrames.
-(Data courtesy of the [UN Data Explorer](http://data.un.org/Explorer.aspx).)"""
-)
+st.markdown("# Gantt Chart")
+st.sidebar.header("Gantt Chart")
 
 
-@st.cache_data
-def get_UN_data():
-    AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
-    df = pd.read_csv(AWS_BUCKET_URL + "/agri.csv.gz")
-    return df.set_index("Region")
+df = [dict(Task="Job-1", Start='2017-01-01', Finish='2017-02-02', Resource='Complete'),
+      dict(Task="Job-1", Start='2017-02-15', Finish='2017-03-15', Resource='Incomplete'),
+      dict(Task="Job-2", Start='2017-01-17', Finish='2017-02-17', Resource='Not Started'),
+      dict(Task="Job-2", Start='2017-01-17', Finish='2017-02-17', Resource='Complete'),
+      dict(Task="Job-3", Start='2017-03-10', Finish='2017-03-20', Resource='Not Started'),
+      dict(Task="Job-3", Start='2017-04-01', Finish='2017-04-20', Resource='Not Started'),
+      dict(Task="Job-3", Start='2017-05-18', Finish='2017-06-18', Resource='Not Started'),
+      dict(Task="Job-4", Start='2017-01-14', Finish='2017-03-14', Resource='Complete')]
 
+colors = {'Not Started': 'rgb(220, 0, 0)',
+          'Incomplete': (1, 0.9, 0.16),
+          'Complete': 'rgb(0, 255, 100)'}
 
-try:
-    df = get_UN_data()
-    countries = st.multiselect(
-        "Choose countries", list(df.index), ["China", "United States of America"]
-    )
-    if not countries:
-        st.error("Please select at least one country.")
-    else:
-        data = df.loc[countries]
-        data /= 1000000.0
-        st.write("### Gross Agricultural Production ($B)", data.sort_index())
-
-        data = data.T.reset_index()
-        data = pd.melt(data, id_vars=["index"]).rename(
-            columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
-        )
-        chart = (
-            alt.Chart(data)
-            .mark_area(opacity=0.3)
-            .encode(
-                x="year:T",
-                y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
-                color="Region:N",
-            )
-        )
-        st.altair_chart(chart, use_container_width=True)
-except URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
-    """
-        % e.reason
-    )
+fig = ff.create_gantt(df, colors=colors, index_col='Resource', show_colorbar=True,
+                      group_tasks=True)
+fig.show()
