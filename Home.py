@@ -11,7 +11,7 @@ st.set_page_config(
 st.write("# Welcome to the Green Index! 🌲")
 st.subheader("Making Informed Decisions by Visualizing, Exploring, and Evaluating Renewable Energy Data")
 
-st.sidebar.success("Select a demo above.")
+st.sidebar.success("Select a page above.")
 
 st.markdown(
     """
