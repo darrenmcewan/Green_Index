@@ -28,7 +28,7 @@ with col3:
     st.image(image)
 
 countries = ['USA']
-states = ['AL','AK', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
+states = ['AK','AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
           'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
@@ -122,7 +122,7 @@ with col1:
             "rectangle": False,
         },
     ).add_to(m)
-    if state!='AL':
+    if state!='AK':
         m.zoom_to_bounds(statesBounding[state])
     folium.TileLayer('openstreetmap').add_to(m)
 
