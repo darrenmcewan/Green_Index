@@ -5,12 +5,15 @@ from folium.plugins import Draw
 from streamlit_folium import st_folium
 import numpy as np
 from PIL import Image
+import leafmap.foliumap as foliumap
 
 #
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
-col1,col2,col3,col4,col5 = st.columns(5)
+st.write(
+    "👈 View the sidebar for help on getting started\n\n\n\n")
+col1,col2,col3 = st.columns(3)
 with col1:
     st.write("Wind")
     image = Image.open("images/wind.JPG")
@@ -23,17 +26,9 @@ with col3:
     st.write("Solar")
     image = Image.open("images/solar.JPG")
     st.image(image)
-with col4:
-    st.write("Biomass")
-    image = Image.open("images/biomass.JPG")
-    st.image(image)
-with col5:
-    st.write("Geothermal")
-    image = Image.open("images/geothermal.JPG")
-    st.image(image)
 
-st.write(
-    "👈 View the sidebar for help on getting started\n\n\n\n")
+
+
 
 
 
@@ -43,19 +38,20 @@ states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
-energytype = ['Biomass', 'Geothermal', 'Hydropower', 'Solor', 'Wind']
+energytype = ['Wind','Solar', 'Hydropower', 'Biomass', 'Geothermal' ]
 
 
-col1, col2, col3 = st.columns([1,3,2])
+col1, col2 = st.columns([3,1])
 with col1:
-    energy_type = st.selectbox("Energy Type", energytype, help="Select an energy type you would like displayed")
-with col2:
-    m = folium.Map(
-        location=[40.580585,-95.779294],
+    m = foliumap.Map(
+        location=[40.580585, -95.779294],
         zoom_start=4,
         control_scale=True,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     )
+    #https://anthonylouisdagostino.com/bounding-boxes-for-all-us-states/
+    m.zoom_to_bounds([-88.473227, 30.223334,-84.88908,35.008028])
+
     Draw(
         export=False,
         position="topleft",
@@ -78,7 +74,7 @@ with col2:
             coords = output['all_drawings'][0]['geometry']['coordinates'][0]
             for i in coords:
                 st.write(i)
-with col3:
+with col2:
 
     chart_data = pd.DataFrame(
         {'Resource Type': ["Solar", "Wind", "Hydro", "Biomas","Geothermal"], 'kw/year': np.random.randint(130,size=5)})
@@ -102,7 +98,9 @@ with st.sidebar.container():
         unsafe_allow_html=True,
     )
     st.selectbox("Country", countries, help="Only the United States is currently supported")
-    state = st.selectbox("States", states, help="Select a state to zoom in on")
+    state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on")
+    energy_type = st.selectbox("Renewable Energy Type", energytype, help="Select an energy type you would like displayed")
+
 
 col1,col2,col3,col4 = st.columns(4)
 with col1:

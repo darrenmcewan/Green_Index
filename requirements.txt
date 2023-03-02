@@ -1,4 +1,4 @@
-streamlit~=1.18.1
+streamlit~=1.19.0
 pandas~=1.4.1
 folium~=0.14.0
 inotify
@@ -6,3 +6,4 @@ streamlit-folium
 numpy~=1.22.2
 plotly
 Pillow~=9.3.0
+leafmap
