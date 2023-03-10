@@ -1,4 +1,4 @@
-streamlit~=1.19.0
+streamlit~=1.20.0
 pandas~=1.4.1
 folium~=0.14.0
 inotify

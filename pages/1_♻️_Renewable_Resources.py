@@ -6,13 +6,15 @@ from streamlit_folium import st_folium
 import numpy as np
 from PIL import Image
 import leafmap.foliumap as foliumap
+import base64
 
 #
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
-st.write(
-    "👈 View the sidebar for help on getting started\n\n\n\n")
+pdfFileObj = open('pdf/team007proposal.pdf', 'rb')
+st.download_button('Download Project Proposal', pdfFileObj, file_name='team007proposal.pdf', mime='pdf')
+
 col1, col2, col3 = st.columns(3)
 with col1:
     st.write("Wind")
