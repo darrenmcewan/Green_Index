@@ -6,13 +6,21 @@ from streamlit_folium import st_folium
 import numpy as np
 from PIL import Image
 import leafmap.foliumap as foliumap
-import base64
+from scripts.existing_resources import *
 
-#
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
+### DATA
+data = pd.read_csv('data/Power_Plants.csv')
+resources = ['Hydroelectric', 'Solar', 'Wind']
+data = data[data['PrimSource'].isin(resources)]
+###
+
+
+
+
+
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
-
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -29,11 +37,65 @@ with col3:
     st.image(image)
 
 countries = ['USA']
-states = ['AK','AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
+states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
           'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
+states = {
+    'AK': 'Alaska',
+    'AL': 'Alabama',
+    'AR': 'Arkansas',
+    'AZ': 'Arizona',
+    'CA': 'California',
+    'CO': 'Colorado',
+    'CT': 'Connecticut',
+    'DC': 'District of Columbia',
+    'DE': 'Delaware',
+    'FL': 'Florida',
+    'GA': 'Georgia',
+    'HI': 'Hawaii',
+    'IA': 'Iowa',
+    'ID': 'Idaho',
+    'IL': 'Illinois',
+    'IN': 'Indiana',
+    'KS': 'Kansas',
+    'KY': 'Kentucky',
+    'LA': 'Louisiana',
+    'MA': 'Massachusetts',
+    'MD': 'Maryland',
+    'ME': 'Maine',
+    'MI': 'Michigan',
+    'MN': 'Minnesota',
+    'MO': 'Missouri',
+    'MS': 'Mississippi',
+    'MT': 'Montana',
+    'NC': 'North Carolina',
+    'ND': 'North Dakota',
+    'NE': 'Nebraska',
+    'NH': 'New Hampshire',
+    'NJ': 'New Jersey',
+    'NM': 'New Mexico',
+    'NV': 'Nevada',
+    'NY': 'New York',
+    'OH': 'Ohio',
+    'OK': 'Oklahoma',
+    'OR': 'Oregon',
+    'PA': 'Pennsylvania',
+    'RI': 'Rhode Island',
+    'SC': 'South Carolina',
+    'SD': 'South Dakota',
+    'TN': 'Tennessee',
+    'TX': 'Texas',
+    'UT': 'Utah',
+    'VA': 'Virginia',
+    'VT': 'Vermont',
+    'WA': 'Washington',
+    'WI': 'Wisconsin',
+    'WV': 'West Virginia',
+    'WY': 'Wyoming'
+}
+
 statesBounding = {'AL': [-88.473227, 30.223334, -84.88908, 35.008028],
                   'AK': [-179.148909, 51.214183, 179.77847, 71.365162],
                   'AZ': [-114.81651, 31.332177, -109.045223, 37.00426],
@@ -84,7 +146,15 @@ statesBounding = {'AL': [-88.473227, 30.223334, -84.88908, 35.008028],
                   'WV': [-82.644739, 37.201483, -77.719519, 40.638801],
                   'WI': [-92.888114, 42.491983, -86.805415, 47.080621],
                   'WY': [-111.056888, 40.994746, -104.05216, 45.005904]}
-energytype = ['Wind', 'Solar', 'Hydropower', 'Biomass', 'Geothermal']
+energytype = ['Wind', 'Solar', 'Hydroelectric']
+state_groups = data.groupby(['StateName', 'PrimSource'])
+state_dict = {}
+for (state, res_type), group in state_groups:
+    if state not in state_dict:
+        state_dict[state] = {}
+    state_dict[state][res_type] = group[['Latitude', 'Longitude']].values.tolist()
+wind, water, solar = resource_locations(data)
+
 
 with st.sidebar.container():
     st.markdown(
@@ -123,29 +193,35 @@ with col1:
             "rectangle": False,
         },
     ).add_to(m)
-    if state!='AK':
+    if state != 'AK':
         m.zoom_to_bounds(statesBounding[state])
     folium.TileLayer('openstreetmap').add_to(m)
 
+    if state == 'AK':
+        for coord in wind:
+            folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+        for coord in solar:
+            folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+        for coord in water:
+            folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+    else:
+        if energy_type in state_dict[states[state]]:
+            for coord in state_dict[states[state]][energy_type]:
+                folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+
     output = st_folium(m, key="init", width=1000, height=600)
-    if output:
-        if output["all_drawings"] is not None:
-            coords = output['all_drawings'][0]['geometry']['coordinates'][0]
-            for i in coords:
-                st.write(i)
+
 with col2:
     chart_data = pd.DataFrame(
-        {'Resource Type': ["Solar", "Wind", "Hydro", "Biomas", "Geothermal"],
-         'kw/year': np.random.randint(130, size=5)})
+        {'Resource Type': ["Solar", "Wind", "Hydro"],
+         'kw/year': np.random.randint(130, size=3)})
     st.write("Average Annual Power Production")
     st.bar_chart(chart_data, x='Resource Type', y='kw/year')
 
     chart_data = pd.DataFrame(
-        {'Resource Type': ["Solar", "Wind", "Hydro", "Biomas", "Geothermal"], 'LCOE': np.random.randint(130, size=5)})
+        {'Resource Type': ["Solar", "Wind", "Hydro"], 'LCOE': np.random.randint(130, size=3)})
     st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
     st.bar_chart(chart_data, x='Resource Type', y='LCOE')
-
-
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
