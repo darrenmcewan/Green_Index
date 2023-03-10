@@ -16,9 +16,6 @@ data = data[data['PrimSource'].isin(resources)]
 ###
 
 
-
-
-
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 
