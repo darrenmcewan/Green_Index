@@ -8,7 +8,7 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.write("# Welcome to the Green Index! 🌲")
+st.write("# Welcome to the  Green Index! 🌲")
 st.subheader("Making Informed Decisions by Visualizing, Exploring, and Evaluating Renewable Energy Data")
 
 st.sidebar.success("Select a page above.")
