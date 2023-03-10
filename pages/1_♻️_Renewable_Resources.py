@@ -196,11 +196,11 @@ with col1:
 
     if state == 'AK':
         for coord in wind:
-            folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+            folium.Marker(location=[coord[0], coord[1]], fill_color='gray', radius=8).add_to(m)
         for coord in solar:
-            folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+            folium.Marker(location=[coord[0], coord[1]], fill_color='yellow', radius=8).add_to(m)
         for coord in water:
-            folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+            folium.Marker(location=[coord[0], coord[1]], fill_color='blue', radius=8).add_to(m)
     else:
         if energy_type in state_dict[states[state]]:
             for coord in state_dict[states[state]][energy_type]:
