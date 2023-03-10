@@ -12,8 +12,7 @@ import base64
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
-pdfFileObj = open('pdf/team007proposal.pdf', 'rb')
-st.download_button('Download Project Proposal', pdfFileObj, file_name='team007proposal.pdf', mime='pdf')
+
 
 col1, col2, col3 = st.columns(3)
 with col1:
