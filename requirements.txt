@@ -7,3 +7,5 @@ numpy~=1.22.2
 plotly
 Pillow~=9.3.0
 leafmap
+statsmodels
+altair

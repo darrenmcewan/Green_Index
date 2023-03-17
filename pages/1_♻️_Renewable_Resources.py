@@ -234,17 +234,28 @@ with col1:
 
     if state == 'AK':
         for coord in wind:
-            folium.Marker(location=[coord[0], coord[1]], fill_color='gray', radius=8).add_to(m)
+            folium.CircleMarker([coord[0], coord[1]], radius=4, color ='#8d99ae', fill_color="#8d99ae").add_to(m)
         for coord in solar:
-            folium.Marker(location=[coord[0], coord[1]], fill_color='yellow', radius=8).add_to(m)
+            folium.CircleMarker([coord[0], coord[1]], radius=4, color ='#ffd166', fill_color="#ffd166").add_to(m)
         for coord in water:
-            folium.Marker(location=[coord[0], coord[1]], fill_color='blue', radius=8).add_to(m)
+            folium.CircleMarker([coord[0], coord[1]], radius=4, color ='#118ab2', fill_color="#118ab2").add_to(m)
+
     else:
         if energy_type in state_dict[states[state]]:
             for coord in state_dict[states[state]][energy_type]:
-                folium.Marker(location=[coord[0], coord[1]], fill_color='#43d9de', radius=8).add_to(m)
+                if energy_type == "Wind":
+                    folium.CircleMarker([coord[0], coord[1]], radius=8, color ='#8d99ae', fill_color="#8d99ae").add_to(m)
+                elif energy_type == "Solar":
+                    folium.CircleMarker([coord[0], coord[1]], radius=8, color='#ffd166', fill_color="#ffd166").add_to(m)
+                else:
+                    folium.CircleMarker([coord[0], coord[1]], radius=8, color='#118ab2', fill_color="#118ab2").add_to(m)
 
     output = st_folium(m, key="init", width=1000, height=600)
+
+    labels = ['Wind', 'Solar', 'Hydroelectric']
+    colors = ['#8d99ae', '#ffd166', '#118ab2']
+
+    m.add_legend(title='Legend', labels=labels, colors=colors)
 
 with col2:
     # chart_data = pd.DataFrame(
@@ -337,7 +348,7 @@ with col2:
                 .mark_line()
                 .encode(
                     x=alt.X('year', title='year'),
-                    y=alt.Y(state, title=' % % Power Produced From Renewables'),
+                    y=alt.Y(state, title=' % Power Produced From Renewables'),
                     #color = alt.Color('blue')
                 )
                 #.mark_rule(color='red').encode(y=alt.datum(1))
