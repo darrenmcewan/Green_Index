@@ -6,6 +6,8 @@ from streamlit_folium import st_folium
 import numpy as np
 from PIL import Image
 import leafmap.foliumap as foliumap
+
+import scripts.state_incentives
 from scripts.existing_resources import *
 import altair as alt
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
@@ -371,7 +373,7 @@ with col2:
     st.altair_chart(renewable_fraction_chart + pred_percent_chart)
 
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns([1,1,2])
 with col1:
     st.markdown("## Best Resource")
     st.markdown("- Solar")
@@ -381,9 +383,17 @@ with col2:
     st.markdown("- Wind")
 
 with col3:
-    st.markdown(f"## Incentives for solar in {state}:")
+    st.markdown(f"## Incentives for renewable energy in {state}:")
+    incentives = scripts.state_incentives.show_resources(state)
+    hide_table_row_index = """
+                <style>
+                thead tr th:first-child {display:none}
+                tbody th {display:none}
+                </style>
+                """
 
-with col4:
-    st.markdown(f"## Incentives for solar in {state}:")
+    # Inject CSS with Markdown
+    st.markdown(hide_table_row_index, unsafe_allow_html=True)
+    st.write(incentives, unsafe_allow_html=True)
 
 # https://stackoverflow.com/questions/69409255/how-to-get-city-state-and-country-from-a-list-of-latitude-and-longitude-coordi#
