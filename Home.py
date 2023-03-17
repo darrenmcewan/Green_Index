@@ -24,4 +24,3 @@ with st.columns(3)[1]:
     image = Image.open("images/GT_logo.png")
     image = image.resize((200,200))
     st.image(image)
-st.write(test)
