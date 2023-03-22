@@ -205,6 +205,18 @@ statesBounding = {'AL': [-88.473227, 30.223334, -84.88908, 35.008028],
                   'WI': [-92.888114, 42.491983, -86.805415, 47.080621],
                   'WY': [-111.056888, 40.994746, -104.05216, 45.005904]}
 
+with open('data/states.txt', 'r') as f:
+    lines = f.readlines()
+
+states = {}
+statesBounding = {}
+for line in lines:
+    data = line.strip().split(': ')
+    abbr, name = data[0], data[1].split(':')[0]
+    values = [float(x) for x in data[2][1:-1].split(', ')]
+    states[abbr] = name
+    statesBounding[abbr] = values
+
 # Construct a dictionary of calculated wind and solar potential for each state:
 state_potential_dict = {}
 for my_state in states.keys(): # Make dictionary of wind and solar potential values for each state. In the final version these will be calculated in a function from geodata.
