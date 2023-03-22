@@ -18,7 +18,6 @@ data = pd.read_csv('data/Power_Plants.csv')
 resources = ['Hydroelectric', 'Solar', 'Wind']
 data = data[data['PrimSource'].isin(resources)]
 ###
-
 # Import df of state renewable energy goals (% from renewable sources)
 #state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
 
@@ -103,9 +102,9 @@ with open('data/states.txt', 'r') as f:
 states = {}
 statesBounding = {}
 for line in lines:
-    data = line.strip().split(': ')
-    abbr, name = data[0], data[1].split(':')[0]
-    values = [float(x) for x in data[2][1:-1].split(', ')]
+    state_data = line.strip().split(': ')
+    abbr, name = state_data[0], state_data[1].split(':')[0]
+    values = [float(x) for x in state_data[2][1:-1].split(', ')]
     states[abbr] = name
     statesBounding[abbr] = values
 
