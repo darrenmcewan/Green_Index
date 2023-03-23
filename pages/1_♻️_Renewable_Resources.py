@@ -6,6 +6,8 @@ import streamlit as st
 from PIL import Image
 from folium.plugins import Draw
 from streamlit_folium import st_folium
+from collections import defaultdict
+import branca.colormap as cm
 
 import scripts.state_incentives
 from scripts.eddies_functions import *
@@ -118,34 +120,42 @@ with st.sidebar.container():
     state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
     energy_type = st.selectbox("Renewable Energy Type", energytype,
                                help="Select an energy type you would like displayed")
-    show = st.checkbox('Hide the data')
+
 
 col1, col2 = st.columns([3, 1])
 with col1:
+    options = st.multiselect(
+        'View current renewable energy locations and/or heatmap of totla MW in the US',
+        ['Renewable Energy Locations', 'Heatmap of Total MW'],
+        ['Renewable Energy Locations'])
+
     m = foliumap.Map(
         location=[40.580585, -95.779294],
         zoom_start=4,
         control_scale=False,
+        tiles=None,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     )
 
     if state != 'AK':
         m.zoom_to_bounds(statesBounding[state])
+
     folium.TileLayer('openstreetmap').add_to(m)
-
-
-    m.add_heatmap(
-        'data/Power_Plants.csv',
-        latitude="Latitude",
-        longitude='Longitude',
-        value="Total_MW",
-        name="Total MW Heat Map",
-        radius=20,
-        show=False
-    )
+    folium.TileLayer('cartodbpositron').add_to(m)
+    if "Heatmap of Total MW" in options:
+        m.add_heatmap(
+            'data/Power_Plants.csv',
+            latitude="Latitude",
+            longitude='Longitude',
+            value="Total_MW",
+            name="Total MW Heat Map",
+            radius=20,
+            show=False
+        )
     folium.LayerControl(collapsed=False).add_to(m)
 
-    if not show:
+
+    if "Renewable Energy Locations" in options:
         if state == 'AK':
             for coord in wind:
                 folium.CircleMarker([coord[0], coord[1]], radius=4, color='#8d99ae', fill_color="#8d99ae").add_to(m)
