@@ -1,4 +1,4 @@
-View [here](https://darrenmcewan-wind-visualization-streamlit-app-web2hk.streamlit.app/)
+View [here](https://greenindex.streamlit.app/)
 
 # Streamlit Geospatial
 
