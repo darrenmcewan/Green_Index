@@ -19,7 +19,7 @@ resources = ['Hydroelectric', 'Solar', 'Wind']
 data = data[data['PrimSource'].isin(resources)]
 ###
 # Import df of state renewable energy goals (% from renewable sources)
-#state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
+state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
 
 # Import historical renewable energy data and make dataframe
 historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
