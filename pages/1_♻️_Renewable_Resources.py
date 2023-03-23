@@ -128,22 +128,22 @@ with col1:
         control_scale=False,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     )
-    Draw(
-        export=False,
-        position="topleft",
-        draw_options={
-            "polyline": False,
-            "poly": False,
-            "circle": False,
-            "polygon": True,
-            "marker": False,
-            "circlemarker": False,
-            "rectangle": False,
-        },
-    ).add_to(m)
+
     if state != 'AK':
         m.zoom_to_bounds(statesBounding[state])
     folium.TileLayer('openstreetmap').add_to(m)
+
+
+    m.add_heatmap(
+        'data/Power_Plants.csv',
+        latitude="Latitude",
+        longitude='Longitude',
+        value="Total_MW",
+        name="Total MW Heat Map",
+        radius=20,
+        show=False
+    )
+    folium.LayerControl(collapsed=False).add_to(m)
 
     if not show:
         if state == 'AK':
@@ -167,12 +167,15 @@ with col1:
                         folium.CircleMarker([coord[0], coord[1]], radius=8, color='#118ab2',
                                             fill_color="#118ab2").add_to(m)
 
+
+
     output = st_folium(m, key="init", width=1000, height=600)
+
 
     labels = ['Wind', 'Solar', 'Hydroelectric']
     colors = ['#8d99ae', '#ffd166', '#118ab2']
 
-    m.add_legend(title='Legend', labels=labels, colors=colors)
+
 
 with col2:
     # chart_data = pd.DataFrame(
