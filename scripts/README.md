@@ -8,10 +8,10 @@ This Python script includes four functions to predict future renewable energy pr
 
 - This function uses double exponential smoothing to forecast time-series data for a given alpha and beta value. The function takes the following parameters:
 
-    x_future: A list of future years for which to make predictions.
-    y_data: A pandas series containing the historical data to fit and predict.
-    alpha: A smoothing parameter for the level component.
-    beta: A smoothing parameter for the trend component.
+    - x_future: A list of future years for which to make predictions.
+    - y_data: A pandas series containing the historical data to fit and predict.
+    - alpha: A smoothing parameter for the level component.
+    - beta: A smoothing parameter for the trend component.
 
 - The function returns a pandas series of predicted values for the future years.
 
