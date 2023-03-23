@@ -1,8 +1,10 @@
 def show_resources(state='AK'):
     import pandas as pd
     def make_clickable(link):
-        text = link.split('#')[1]
-        return f'<a target="_blank" href="{link}">{text}</a>'
+        link = link.split('#')[1]
+        name = link.split('#')[0]
+
+        return f'<a target="_blank" href="{name}">{link}</a>'
 
     data = pd.read_csv('data/state_incentives.csv', index_col=False)
     data = data[data['State'] == state]

@@ -177,7 +177,7 @@ with st.sidebar.container():
     state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
     energy_type = st.selectbox("Renewable Energy Type", energytype,
                                help="Select an energy type you would like displayed")
-    show = st.checkbox('Show me the data!')
+    show = st.checkbox('Hide the data')
 
 col1, col2 = st.columns([3, 1])
 with col1:
@@ -205,7 +205,7 @@ with col1:
     folium.TileLayer('openstreetmap').add_to(m)
 
 
-    if show:
+    if not show:
         if state == 'AK':
             for coord in wind:
                 folium.CircleMarker([coord[0], coord[1]], radius=4, color ='#8d99ae', fill_color="#8d99ae").add_to(m)
