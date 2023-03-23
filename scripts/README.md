@@ -1,4 +1,4 @@
-# Renewable Energy Production Forecast
+# Renewable Energy Production Forecast - Eddie's Functions
 
 This Python script includes four functions to predict future renewable energy production and the percentage of energy generated from renewables up to the year 2050 for a specific state in the USA.
 
