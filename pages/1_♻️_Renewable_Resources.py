@@ -160,6 +160,16 @@ with col2:
 
 
     if "Renewable Energy Locations" in options:
+        #df = pd.read_csv('data/Power_Plants.csv')
+        #df = df[(df["StateName"] == states[state]) & (df["PrimSource"] == energy_type)]
+        #if not df.empty:
+        #    locations = df[["latitude", "longitude"]].values.tolist()
+        #    colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Water": "#118ab2"}
+        #    color = colors[energy_type]
+
+        #    for location in locations:
+        #        folium.CircleMarker(location, radius=8, color=color, fill_color=color).add_to(m)
+
         if state == 'AK':
             for coord in wind:
                 folium.CircleMarker([coord[0], coord[1]], radius=4, color='#8d99ae', fill_color="#8d99ae").add_to(m)
@@ -180,8 +190,6 @@ with col2:
                     else:
                         folium.CircleMarker([coord[0], coord[1]], radius=8, color='#118ab2',
                                             fill_color="#118ab2").add_to(m)
-
-
 
     output = st_folium(m, key="init", width=1000, height=600)
 
