@@ -144,11 +144,11 @@ with col1:
     folium.TileLayer('cartodbpositron').add_to(m)
     if "Heatmap of Total MW" in options:
         m.add_heatmap(
-            'data/Power_Plants.csv',
-            latitude="Latitude",
-            longitude='Longitude',
-            value="Total_MW",
-            name="Total MW Heat Map",
+            'https://github.com/darrenmcewan/Wind_visualization/blob/main/data/project_data.csv',
+            latitude="latitude",
+            longitude='longitude',
+            value="util_pv_te",
+            name="util_pv_te Heat Map",
             radius=20,
             show=False
         )
