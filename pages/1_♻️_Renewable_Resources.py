@@ -8,6 +8,7 @@ from folium.plugins import Draw
 from streamlit_folium import st_folium
 from collections import defaultdict
 import branca.colormap as cm
+from branca.element import Figure
 
 import scripts.state_incentives
 from scripts.eddies_functions import *
@@ -109,9 +110,9 @@ with st.sidebar.container():
     st.markdown(
         f"""
         # Getting Started 
-        1. Click the black polygon on the map
-        2. Select the desired locations to analyze various renewable energy options
-        3. Optional: Apply customizations
+        1. Click on the state you would like to see
+        2. Select the desired renewable resource to place on the map
+        3. Optional: add a heatmap to discover potential energy
         """,
         unsafe_allow_html=True,
     )
@@ -122,13 +123,16 @@ with st.sidebar.container():
                                help="Select an energy type you would like displayed")
 
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    options = st.multiselect(
-        'View current renewable energy locations and/or heatmap of totla MW in the US',
-        ['Renewable Energy Locations', 'Heatmap of Total MW'],
-        ['Renewable Energy Locations'])
+## MAP
 
+
+options = st.multiselect(
+    'View current renewable energy locations and/or heatmap of totla MW in the US',
+    ['Renewable Energy Locations', 'Heatmap of Total MW'],
+    ['Renewable Energy Locations'])
+
+col1, col2,col3 = st.columns([1,2,1])
+with col2:
     m = foliumap.Map(
         location=[40.580585, -95.779294],
         zoom_start=4,
@@ -144,7 +148,7 @@ with col1:
     folium.TileLayer('cartodbpositron').add_to(m)
     if "Heatmap of Total MW" in options:
         m.add_heatmap(
-            'https://github.com/darrenmcewan/Wind_visualization/blob/main/data/project_data.csv',
+            'data/project_data.csv',
             latitude="latitude",
             longitude='longitude',
             value="util_pv_te",
@@ -182,24 +186,25 @@ with col1:
     output = st_folium(m, key="init", width=1000, height=600)
 
 
-    labels = ['Wind', 'Solar', 'Hydroelectric']
-    colors = ['#8d99ae', '#ffd166', '#118ab2']
+
+labels = ['Wind', 'Solar', 'Hydroelectric']
+colors = ['#8d99ae', '#ffd166', '#118ab2']
 
 
-
-with col2:
-    # chart_data = pd.DataFrame(
-    #     {'Resource Type': ["Solar", "Wind", "Hydro"],
-    #      'pistachio': [10,50,78],
-    #      'kw/year': np.random.randint(130, size=3)})
-    # st.write(state + " Power Production From Renewables")
-    # st.line_chart(historical_gen, x = 'year', y = state)
-    # st.write(state)
-    # st.write(state_potential_dict[state])
-    # Make altair chart that is more customizable then default line_chart
-    # append columns to historical_gen
-    # define color scale:
-    # scale = alt.Scale(domain=['historical_gen', 'solar_potential', 'wind_potential'], range=['blue', 'red', 'green'])
+col1, col2,col3 = st.columns([2,1,2])
+# chart_data = pd.DataFrame(
+#     {'Resource Type': ["Solar", "Wind", "Hydro"],
+#      'pistachio': [10,50,78],
+#      'kw/year': np.random.randint(130, size=3)})
+# st.write(state + " Power Production From Renewables")
+# st.line_chart(historical_gen, x = 'year', y = state)
+# st.write(state)
+# st.write(state_potential_dict[state])
+# Make altair chart that is more customizable then default line_chart
+# append columns to historical_gen
+# define color scale:
+# scale = alt.Scale(domain=['historical_gen', 'solar_potential', 'wind_potential'], range=['blue', 'red', 'green'])
+with col1:
     historical_gen_chart = (
         alt.Chart(
             data=historical_gen,
@@ -249,7 +254,7 @@ with col2:
     # y= 'Solar Potential',
     # #color = alt.Color('red')
     # # .mark_text(text='doubles every 2 days', angle=0)
-    # ) 
+    # )
 
     wp_df = pd.DataFrame({
         'Wind Potential': [state_potential_dict[state]['wind_potential']] * len(list(range(1960, 2051))),
@@ -259,7 +264,7 @@ with col2:
         x='year',
         y='Wind Potential',
     )
-    st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + wind_potential_line)
+    st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + wind_potential_line, use_container_width=True)
 
     # st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + solar_potential_text + wind_potential_line)
 
@@ -269,7 +274,7 @@ with col2:
     #     {'Resource Type': ["Solar", "Wind", "Hydro"], 'LCOE': np.random.randint(130, size=3)})
     # st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
     # st.bar_chart(chart_data, x='Resource Type', y='LCOE')
-
+with col3:
     renewable_fraction_chart = (
         alt.Chart(
             data=renewable_energy_fraction,
@@ -310,20 +315,12 @@ with col2:
         )
     )
 
-    st.altair_chart(renewable_fraction_chart + pred_percent_chart + state_goals_chart)
+    st.altair_chart(renewable_fraction_chart + pred_percent_chart + state_goals_chart, use_container_width=True)
 
     st.markdown(get_goal_details(state, state_goals))
 
-col1, col2, col3 = st.columns([1, 1, 2])
-with col1:
-    st.markdown("## Best Resource")
-    st.markdown("- Solar")
-
+col1, col2, col3 = st.columns([1,2,1])
 with col2:
-    st.markdown("## Best Investment")
-    st.markdown("- Wind")
-
-with col3:
     st.markdown(f"## Incentives for renewable energy in {state}:")
     incentives = scripts.state_incentives.show_resources(state)
     hide_table_row_index = """
