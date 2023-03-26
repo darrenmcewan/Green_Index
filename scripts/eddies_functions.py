@@ -34,11 +34,11 @@ def renewable_fraction_forecast(state, renewable_energy_fraction, coal_gen, oil_
     future_years = list(range(2020, 2051))
     # hist_total uses all data from 1960 to 2020
     # yhat_hist_total = smooth2(future_years, hist_total[state], 0.8, 0.3)  # alpha = 0.8 captures more recent trends
-    yhat_coal = smooth2(future_years, coal_gen[state], 0.2, 0.1)  # Coal production is flat or decreasing in the US.
+    yhat_coal = smooth2(future_years, coal_gen[state], 0.8, 0.3)  # Coal production is flat or decreasing in the US.
     yhat_oil = smooth2(future_years, oil_gen[state], 0.8, 0.3)  # alpha = 0.8 captures more recent trends
     yhat_nat_gas = smooth2(future_years, nat_gas_gen[state], 0.8, 0.3)  # alpha = 0.8 captures more recent trends
     yhat_wood_and_waste = smooth2(future_years, wood_and_waste_gen[state], 0.8, 0.3)  # alpha = 0.8 captures more recent trends
-    yhat_nuclear = smooth2(future_years, nuclear_gen[state], 0.5, 0.3)  # alpha = 0.8 captures more recent trends
+    yhat_nuclear = smooth2(future_years, nuclear_gen[state], 0.2, 0.1)  # alpha = 0.8 captures more recent trends
     yhat_biomas_for_biofuels = smooth2(future_years, biomas_for_biofuels_gen[state], 0.8, 0.3)  # alpha = 0.8 captures more recent trends
     # prediction for total power equals sum of all predictions.
     yhat_all_primary = yhat_coal + yhat_oil + yhat_nat_gas + yhat_wood_and_waste + yhat_nuclear + yhat_biomas_for_biofuels 
