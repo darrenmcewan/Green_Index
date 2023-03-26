@@ -9,6 +9,7 @@ from streamlit_folium import st_folium
 from collections import defaultdict
 import branca.colormap as cm
 from branca.element import Figure
+from folium.plugins import HeatMap
 
 import scripts.state_incentives
 from scripts.eddies_functions import *
@@ -22,6 +23,8 @@ data = data[data['PrimSource'].isin(resources)]
 
 # Import df of state renewable energy goals (% from renewable sources)
 state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
+# Import df of solar & wind potential
+sw_data = pd.read_csv('data/solar_wind_poten_data.csv')
 
 # Import historical renewable energy data and make dataframes
 historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
@@ -130,7 +133,7 @@ wind, water, solar = resource_locations(data)
 with st.sidebar.container():
     st.markdown(
         f"""
-        # Getting Started 
+        # Getting Started
         1. Click on the state you would like to see
         2. Select the desired renewable resource to place on the map
         3. Optional: add a heatmap to discover potential energy
@@ -149,7 +152,7 @@ with st.sidebar.container():
 
 options = st.multiselect(
     'View current renewable energy locations and/or heatmap of totla MW in the US',
-    ['Renewable Energy Locations', 'Heatmap of Total MW'],
+    ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh', 'Heatmap of Wind Generation Potential MWh'],
     ['Renewable Energy Locations'])
 
 col1, col2,col3 = st.columns([1,2,1])
@@ -167,16 +170,13 @@ with col2:
 
     folium.TileLayer('openstreetmap').add_to(m)
     folium.TileLayer('cartodbpositron').add_to(m)
-    if "Heatmap of Total MW" in options:
-        m.add_heatmap(
-            'data/project_data.csv',
-            latitude="latitude",
-            longitude='longitude',
-            value="util_pv_te",
-            name="util_pv_te Heat Map",
-            radius=20,
-            show=False
-        )
+    lat_long_list_solar = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['util_pv_te'])))
+    lat_long_list_wind = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['land_wind_'])))
+    if "Heatmap of Solar Generation Potential MWh" in options:
+        HeatMap(lat_long_list_solar).add_to(m)
+
+    if "Heatmap of Wind Generation Potential MWh" in options:
+        HeatMap(lat_long_list_wind).add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
 
 
@@ -326,7 +326,7 @@ with col3:
          # multiply by 100.0 to go from fraction to %
         'Predicted Percent Power From Renewables': 100.0 * renewable_fraction_forecast(state, renewable_energy_fraction, coal_gen, oil_gen, nat_gas_gen,
                                                                 wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen,
-                                                                renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen))}) 
+                                                                renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen))})
 
     pred_percent_chart = (  # historical generation fit chart
         alt.Chart(pred_percent_df).mark_line(clip=True, color='blue', strokeDash=[2, 6], size=2).encode(
