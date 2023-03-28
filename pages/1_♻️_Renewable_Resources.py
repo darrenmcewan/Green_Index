@@ -157,11 +157,11 @@ options = st.multiselect(
     ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh', 'Heatmap of Wind Generation Potential MWh'],
     ['Renewable Energy Locations'])
 
-col1, col2,col3 = st.columns([1,2,1])
+col1, col2,col3 = st.columns([1,4,1])
 with col2:
     m = foliumap.Map(
         location=[40.580585, -95.779294],
-        zoom_start=4,
+        zoom_start=3.3,
         control_scale=False,
         tiles=None,
         attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
@@ -188,7 +188,7 @@ with col2:
             color = "#76c893"
         else:
             data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
-            colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Water": "#118ab2"}
+            colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Hydroelectric": "#118ab2"}
             color = colors[energy_type]
 
         locations = data[["Latitude", "Longitude"]].values.tolist()
