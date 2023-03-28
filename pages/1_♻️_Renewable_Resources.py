@@ -24,7 +24,7 @@ data = data[data['PrimSource'].isin(resources)]
 # Import df of state renewable energy goals (% from renewable sources)
 state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
 # Import df of solar & wind potential
-sw_data = pd.read_csv('data/solar_wind_poten_data.csv')
+sw_data = pd.read_csv('data/solar_wind_poten.csv')
 
 # Import historical renewable energy data and make dataframes
 historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
@@ -171,7 +171,7 @@ with col2:
     folium.TileLayer('openstreetmap').add_to(m)
     folium.TileLayer('cartodbpositron').add_to(m)
     lat_long_list_solar = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['util_pv_te'])))
-    lat_long_list_wind = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['land_wind_'])))
+    lat_long_list_wind = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['dist_wind_'])))
     if "Heatmap of Solar Generation Potential MWh" in options:
         HeatMap(lat_long_list_solar).add_to(m)
 
