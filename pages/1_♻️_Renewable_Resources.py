@@ -181,7 +181,6 @@ with col2:
         HeatMap(lat_long_list_wind).add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
 
-
     if "Renewable Energy Locations" in options:
         if state == 'AK':
             data = data[data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
@@ -193,13 +192,10 @@ with col2:
 
         locations = data[["Latitude", "Longitude"]].values.tolist()
 
-
         for location in locations:
             folium.CircleMarker(location, radius=4, color=color, fill_color=color).add_to(m)
 
-
     output = st_folium(m, key="init", width=600, height=600)
-
 
 
 labels = ['Wind', 'Solar', 'Hydroelectric']
