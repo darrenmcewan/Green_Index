@@ -19,7 +19,8 @@ st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 # DATA
 data = pd.read_csv('data/Power_Plants.csv')
 resources = ['Hydroelectric', 'Solar', 'Wind']
-data = data[data['PrimSource'].isin(resources)]
+
+
 
 # Import df of state renewable energy goals (% from renewable sources)
 state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
@@ -181,38 +182,22 @@ with col2:
 
 
     if "Renewable Energy Locations" in options:
-        #df = pd.read_csv('data/Power_Plants.csv')
-        #df = df[(df["StateName"] == states[state]) & (df["PrimSource"] == energy_type)]
-        #if not df.empty:
-        #    locations = df[["latitude", "longitude"]].values.tolist()
-        #    colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Water": "#118ab2"}
-        #    color = colors[energy_type]
-
-        #    for location in locations:
-        #        folium.CircleMarker(location, radius=8, color=color, fill_color=color).add_to(m)
-
         if state == 'AK':
-            for coord in wind:
-                folium.CircleMarker([coord[0], coord[1]], radius=4, color='#8d99ae', fill_color="#8d99ae").add_to(m)
-            for coord in solar:
-                folium.CircleMarker([coord[0], coord[1]], radius=4, color='#ffd166', fill_color="#ffd166").add_to(m)
-            for coord in water:
-                folium.CircleMarker([coord[0], coord[1]], radius=4, color='#118ab2', fill_color="#118ab2").add_to(m)
-
+            data = data[data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
+            color = "#76c893"
         else:
-            if energy_type in state_dict[states[state]]:
-                for coord in state_dict[states[state]][energy_type]:
-                    if energy_type == "Wind":
-                        folium.CircleMarker([coord[0], coord[1]], radius=8, color='#8d99ae',
-                                            fill_color="#8d99ae").add_to(m)
-                    elif energy_type == "Solar":
-                        folium.CircleMarker([coord[0], coord[1]], radius=8, color='#ffd166',
-                                            fill_color="#ffd166").add_to(m)
-                    else:
-                        folium.CircleMarker([coord[0], coord[1]], radius=8, color='#118ab2',
-                                            fill_color="#118ab2").add_to(m)
+            data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
+            colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Water": "#118ab2"}
+            color = colors[energy_type]
 
-    output = st_folium(m, key="init", width=1000, height=600)
+        locations = data[["Latitude", "Longitude"]].values.tolist()
+
+
+        for location in locations:
+            folium.CircleMarker(location, radius=4, color=color, fill_color=color).add_to(m)
+
+
+    output = st_folium(m, key="init", width=600, height=600)
 
 
 
