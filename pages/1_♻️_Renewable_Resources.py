@@ -27,6 +27,8 @@ state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
 # Import df of solar & wind potential
 sw_data = pd.read_csv('data/solar_wind_poten.csv')
 sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
+#load in county geoJSON
+geojson = gpd.read_file('data/county_reduced.geojson')
 
 # Import historical renewable energy data and make dataframes
 historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
@@ -172,13 +174,29 @@ with col2:
 
     folium.TileLayer('openstreetmap').add_to(m)
     folium.TileLayer('cartodbpositron').add_to(m)
-    lat_long_list_solar = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['solar_sum'])))
-    lat_long_list_wind = list(map(list, zip(sw_data['latitude'], sw_data['longitude'], sw_data['dist_wind_'])))
     if "Heatmap of Solar Generation Potential MWh" in options:
-        HeatMap(lat_long_list_solar).add_to(m)
+        folium.Choropleth(
+            geo_data=geojson,
+            data=sw_data,
+            columns=['fips', 'solar_sum'],
+            key_on = 'feature.properties.cnty_code2',
+            fill_color='YlOrRd',
+            nan_fill_color="white",  # Use white color if there is no data available for the county
+            fill_opacity=0.7,
+            line_opacity=0.3,
+            legend_name="Solar Potential").add_to(m)
 
     if "Heatmap of Wind Generation Potential MWh" in options:
-        HeatMap(lat_long_list_wind).add_to(m)
+        folium.Choropleth(
+            geo_data=geojson,
+            data=sw_data,
+            columns=['fips', 'dist_wind_'],
+            key_on='feature.properties.cnty_code2',
+            fill_color='BuPu',
+            nan_fill_color="white",  # Use white color if there is no data available for the county
+            fill_opacity=0.7,
+            line_opacity=0.3,
+            legend_name="Wind Potential").add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
 
     if "Renewable Energy Locations" in options:
