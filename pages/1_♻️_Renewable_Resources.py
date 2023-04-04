@@ -10,6 +10,7 @@ from collections import defaultdict
 import branca.colormap as cm
 from branca.element import Figure
 from folium.plugins import HeatMap
+from folium import Choropleth
 
 import scripts.state_incentives
 from scripts.eddies_functions import *
@@ -25,7 +26,7 @@ resources = ['Hydroelectric', 'Solar', 'Wind']
 # Import df of state renewable energy goals (% from renewable sources)
 state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
 # Import df of solar & wind potential
-sw_data = pd.read_csv('data/solar_wind_poten.csv')
+sw_data = pd.read_csv('data/project_data_3.csv')
 sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
 #load in county geoJSON
 geojson = gpd.read_file('data/county_reduced.geojson')
