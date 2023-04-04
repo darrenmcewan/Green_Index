@@ -3,6 +3,7 @@ import folium
 import leafmap.foliumap as foliumap
 import pandas as pd
 import streamlit as st
+import geopandas as gpd
 from PIL import Image
 from folium.plugins import Draw
 from streamlit_folium import st_folium
@@ -11,6 +12,7 @@ import branca.colormap as cm
 from branca.element import Figure
 from folium.plugins import HeatMap
 from folium import Choropleth
+
 
 import scripts.state_incentives
 from scripts.eddies_functions import *
