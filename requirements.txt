@@ -10,3 +10,4 @@ leafmap
 statsmodels
 altair
 branca
+geopandas
