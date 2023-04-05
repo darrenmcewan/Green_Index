@@ -1,10 +1,9 @@
 # Function that uses double exponential smoothing to predict renewable energy production and % energy from renewables up to the year 2050.
 def smooth2(x_future, y_data, alpha, beta):  # takes "array-like" data let's try a panda's series.
     from statsmodels.tsa.holtwinters import ExponentialSmoothing
-    # create model. Adding damping has been shown to increase accuracy for longterm forecasts.
-    ex_smooth_model = ExponentialSmoothing(y_data, trend='additive',damped_trend=True, initialization_method="estimated")
-    # fit model
-    ex_fit = ex_smooth_model.fit(smoothing_level=alpha, smoothing_trend=beta)
+    ex_smooth_model = ExponentialSmoothing(y_data, trend='additive',damped_trend=True) # The damping parameter needs to be optimized.
+    # fit model:  increase maxiter to try to help with convergence.
+    ex_fit = ex_smooth_model.fit(smoothing_level=alpha, smoothing_trend=beta, minimize_kwargs={'options':{'maxiter':999}}) 
     # make prediction
     yhat = ex_fit.predict(start=len(y_data), end=len(y_data) + len(x_future) - 1)  # predict y values for future years
     yhat[yhat < 0] = 0.0  # convert any negative values to 0
