@@ -162,8 +162,8 @@ options = st.multiselect(
     ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh', 'Heatmap of Wind Generation Potential MWh'],
     ['Renewable Energy Locations'])
 
-col1, col2,col3 = st.columns([1,4,1])
-with col2:
+col1, col2 = st.columns(2)
+with col1:
     m = foliumap.Map(
         location=[40.580585, -95.779294],
         zoom_start=3.3,
@@ -214,7 +214,7 @@ with col2:
         locations = data[["Latitude", "Longitude"]].values.tolist()
 
         for location in locations:
-            folium.CircleMarker(location, radius=4, color=color, fill_color=color).add_to(m)
+            folium.CircleMarker(location, radius=4, color='#5A5A5A', fill_color=color).add_to(m)
 
     output = st_folium(m, key="init", width=600, height=600)
 
@@ -223,7 +223,7 @@ labels = ['Wind', 'Solar', 'Hydroelectric']
 colors = ['#8d99ae', '#ffd166', '#118ab2']
 
 
-col1, col2,col3 = st.columns([2,1,2])
+#col1, col2 = st.columns(2)
 # chart_data = pd.DataFrame(
 #     {'Resource Type': ["Solar", "Wind", "Hydro"],
 #      'pistachio': [10,50,78],
@@ -236,7 +236,7 @@ col1, col2,col3 = st.columns([2,1,2])
 # append columns to historical_gen
 # define color scale:
 # scale = alt.Scale(domain=['historical_gen', 'solar_potential', 'wind_potential'], range=['blue', 'red', 'green'])
-with col1:
+with col2:
     historical_gen_chart = (
         alt.Chart(
             data=historical_gen,
@@ -306,7 +306,7 @@ with col1:
     #     {'Resource Type': ["Solar", "Wind", "Hydro"], 'LCOE': np.random.randint(130, size=3)})
     # st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
     # st.bar_chart(chart_data, x='Resource Type', y='LCOE')
-with col3:
+#with col2:
     renewable_fraction_chart = (
         alt.Chart(
             data=renewable_energy_fraction,
