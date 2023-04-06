@@ -20,40 +20,47 @@ from scripts.existing_resources import *
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 # DATA
-data = pd.read_csv('data/Power_Plants.csv')
 resources = ['Hydroelectric', 'Solar', 'Wind']
 
+@st.cache_data
+def getData():
+    data = pd.read_csv('data/Power_Plants.csv')
+    # Import df of state renewable energy goals (% from renewable sources)
+    state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
+    # Import df of solar & wind potential
+    sw_data = pd.read_csv('data/project_data_3.csv')
+    sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
+    # load in county geoJSON
+    geojson = gpd.read_file('data/county_reduced.geojson')
+    # Import historical renewable energy data and make dataframes
+    historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
+    # Imoport total energy production by state (including renewables and fossil fuels)
+    historical_total_billion_Btu = pd.read_csv('data/historical_total_energy_production_by_state_in_billion_Btu.csv')
+    # Import statewide solar power generation data (1989 - 2020) for forecasting
+    solar_gen = pd.read_csv('data/solar_production.csv')
+    # keep years column for conversion from billion Btu to GWh
+    years_before_forecast = solar_gen['year']
+    # Import statewide wind power generation data (1989 - 2020) for forecasting
+    wind_gen = pd.read_csv('data/wind_production.csv')
+    # Import statewide hydropower generation data (1989 - 2020) for forecasting
+    hydro_gen = pd.read_csv('data/hydro_production.csv')
+    # Import statewide geothermal power generation data (1989 - 2020) for forecasting
+    geothermal_gen = pd.read_csv('data/geothermal_production.csv')
+    # Import data for all other types of primary power generation data (1989 - 2020) for forecasting
+    coal_gen = pd.read_csv('data/coal_production.csv')
+    oil_gen = pd.read_csv('data/crude_oil_production.csv')
+    nat_gas_gen = pd.read_csv('data/natural_gas_production.csv')
+    wood_and_waste_gen = pd.read_csv('data/wood_and_waste_production.csv')
+    nuclear_gen = pd.read_csv('data/nuclear_consumption.csv')
+    biomass_for_biofuels_gen = pd.read_csv('data/biomass_for_biofuels.csv')
 
 
-# Import df of state renewable energy goals (% from renewable sources)
-state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
-# Import df of solar & wind potential
-sw_data = pd.read_csv('data/project_data_3.csv')
-sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
-#load in county geoJSON
-geojson = gpd.read_file('data/county_reduced.geojson')
+    return data, state_goals, sw_data, geojson, historical_gen_billion_Btu, historical_total_billion_Btu, solar_gen, years_before_forecast, wind_gen, hydro_gen, geothermal_gen, coal_gen, oil_gen, nat_gas_gen, wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen
 
-# Import historical renewable energy data and make dataframes
-historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
-# Imoport total energy production by state (including renewables and fossil fuels)
-historical_total_billion_Btu = pd.read_csv('data/historical_total_energy_production_by_state_in_billion_Btu.csv')
-# Import statewide solar power generation data (1989 - 2020) for forecasting
-solar_gen = pd.read_csv('data/solar_production.csv')
-# keep years column for conversion from billion Btu to GWh
-years_before_forecast = solar_gen['year']
-# Import statewide wind power generation data (1989 - 2020) for forecasting
-wind_gen = pd.read_csv('data/wind_production.csv')
-# Import statewide hydropower generation data (1989 - 2020) for forecasting
-hydro_gen = pd.read_csv('data/hydro_production.csv')
-# Import statewide geothermal power generation data (1989 - 2020) for forecasting
-geothermal_gen = pd.read_csv('data/geothermal_production.csv')
-# Import data for all other types of primary power generation data (1989 - 2020) for forecasting
-coal_gen = pd.read_csv('data/coal_production.csv')
-oil_gen = pd.read_csv('data/crude_oil_production.csv')
-nat_gas_gen = pd.read_csv('data/natural_gas_production.csv')
-wood_and_waste_gen = pd.read_csv('data/wood_and_waste_production.csv')
-nuclear_gen = pd.read_csv('data/nuclear_consumption.csv')
-biomass_for_biofuels_gen = pd.read_csv('data/biomass_for_biofuels.csv')
+data, state_goals, sw_data, geojson, historical_gen_billion_Btu, historical_total_billion_Btu, solar_gen, years_before_forecast, wind_gen, hydro_gen, geothermal_gen, coal_gen, oil_gen, nat_gas_gen, wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen = getData()
+
+
+
 
 
 # convert all columns (except year) from billion Btu to GWh
