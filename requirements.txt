@@ -11,3 +11,4 @@ statsmodels
 altair
 branca
 geopandas
+mpld3

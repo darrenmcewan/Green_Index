@@ -254,7 +254,8 @@ with col2:
     ########################## Start example code for matplot lib ###########################################################
     # From:  https://blog.streamlit.io/make-your-st-pyplot-interactive/
     # Imports for all of the code
-    import matplotlib.pyplot as plt, mpld3
+    import matplotlib.pyplot as plt
+    import mpld3
     import numpy as np
     from mpld3 import plugins
     import streamlit.components.v1 as components
