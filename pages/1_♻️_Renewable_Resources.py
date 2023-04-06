@@ -137,6 +137,20 @@ for (state, res_type), group in state_groups:
     state_dict[state][res_type] = group[['Latitude', 'Longitude']].values.tolist()
 wind, water, solar = resource_locations(data)
 
+
+# Make dataframe containing total solar and wind technical potential for each state.
+state_sw_potential = sw_data[['state_name','solar_sum', 'dist_wind_']]
+state_sw_potential = state_sw_potential.groupby('state_name', as_index  = False).sum()
+# divide by 1000 to change units from MWh to GWh
+state_sw_potential['solar_sum'] = state_sw_potential['solar_sum']/1000.0
+state_sw_potential['dist_wind_'] = state_sw_potential['dist_wind_']/1000.0
+# rename columns to add units
+state_sw_potential.rename(columns = {'solar_sum': 'solar_sum (GWh)', 'dist_wind_': 'dist_wind_ (GWh)'}, inplace = True)
+# swap states keys and values so that full names in state_sw_potential can be abreviated.
+states_abrv_dict = dict((v,k) for k,v in states.items()) 
+state_sw_potential['state_name'] = state_sw_potential['state_name'].map(states_abrv_dict)
+
+
 with st.sidebar.container():
     st.markdown(
         f"""
@@ -251,10 +265,10 @@ with col2:
         'year': future_years,
         'Predicted Renewable Generation': renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen)})
     sp_df = pd.DataFrame({
-        'Solar Potential': [state_potential_dict[state]['solar_potential']] * len(list(range(1960, 2051))),
+        'Solar Potential': list(state_sw_potential['solar_sum (GWh)'][state_sw_potential['state_name'] == state])*len(list(range(1960, 2051))), 
         'year': list(range(1960, 2051))})
     wp_df = pd.DataFrame({
-        'Wind Potential': [state_potential_dict[state]['wind_potential']] * len(list(range(1960, 2051))),
+        'Wind Potential': list(state_sw_potential['dist_wind_ (GWh)'][state_sw_potential['state_name'] == state])*len(list(range(1960, 2051))),
         'year': list(range(1960, 2051))})
     pred_percent_df = pd.DataFrame({
         'year': future_years,
