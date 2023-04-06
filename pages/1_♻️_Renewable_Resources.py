@@ -237,117 +237,214 @@ colors = ['#8d99ae', '#ffd166', '#118ab2']
 # define color scale:
 # scale = alt.Scale(domain=['historical_gen', 'solar_potential', 'wind_potential'], range=['blue', 'red', 'green'])
 with col2:
-    historical_gen_chart = (
-        alt.Chart(
-            data=historical_gen,
-            title=state + " Power Produced From Renewables ",
-        )
-        .mark_line()
-        .encode(
-            # x=alt.X("capacity 1", axis=alt.Axis(title="Capacity 1")),
-            # x=alt.X("capacity 2", axis=alt.Axis(title="Capacity 2")),
-            x=alt.X('year', title='year'),
-            y=alt.Y(state, title='GWh'),
-            # color = alt.Color('blue')
-        )
-        # .mark_rule(color='red').encode(y=alt.datum(1))
-        # .mark_rule(color='red').encode(y=alt.datum(state_potential_dict[state]['solar_potential']))
-    )
-
-    # make new data frame for predicted renewable generation from 2020 to 2050
+    ########################## Start example code for matplot lib ###########################################################
+    # From:  https://blog.streamlit.io/make-your-st-pyplot-interactive/
+    # Imports for all of the code
+    import matplotlib.pyplot as plt, mpld3
+    import numpy as np
+    from mpld3 import plugins
+    import streamlit.components.v1 as components
+    
+    # Redefine dataframes to be plotted each time a new state is selected
     future_years = list(range(2020, 2051))
     hgf_df = pd.DataFrame({
         'year': future_years,
-        # 'Predicted Renewable Generation': smooth2(future_years, historical_gen[state]) })
         'Predicted Renewable Generation': renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen)})
-
-    hgf_chart = (  # historical generation fit chart
-        alt.Chart(hgf_df).mark_line(color='blue', strokeDash=[2, 6], size=2).encode(
-            x='year',
-            y='Predicted Renewable Generation',
-        )
-    )
-
     sp_df = pd.DataFrame({
         'Solar Potential': [state_potential_dict[state]['solar_potential']] * len(list(range(1960, 2051))),
         'year': list(range(1960, 2051))})
-
-    #  solar_potential_line = alt.Chart(sp_df).mark_line(color= 'red').encode(
-    solar_potential_line = alt.Chart(sp_df).mark_line(color='red', strokeDash=[12, 6], size=2).encode(
-        x='year',
-        y='Solar Potential',
-        # color = alt.Color('red')
-        # .mark_text(text='doubles every 2 days', angle=0)
-    )
-
-    # # This needs to correspond to a df with only 1 coordinate, not sp_df
-    # solar_potential_text = alt.Chart(sp_df).mark_text(text= state + ' Maximum Solar Potential', color = 'red', angle=0).encode(
-    # x= 'year',
-    # y= 'Solar Potential',
-    # #color = alt.Color('red')
-    # # .mark_text(text='doubles every 2 days', angle=0)
-    # )
-
     wp_df = pd.DataFrame({
         'Wind Potential': [state_potential_dict[state]['wind_potential']] * len(list(range(1960, 2051))),
         'year': list(range(1960, 2051))})
-
-    wind_potential_line = alt.Chart(wp_df).mark_line(color='green', strokeDash=[12, 6], size=2).encode(
-        x='year',
-        y='Wind Potential',
-    )
-    st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + wind_potential_line, use_container_width=True)
-
-    # st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + solar_potential_text + wind_potential_line)
-
-    # Now try to make a second chart here:
-
-    # chart_data = pd.DataFrame(
-    #     {'Resource Type': ["Solar", "Wind", "Hydro"], 'LCOE': np.random.randint(130, size=3)})
-    # st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
-    # st.bar_chart(chart_data, x='Resource Type', y='LCOE')
-#with col2:
-    renewable_fraction_chart = (
-        alt.Chart(
-            data=renewable_energy_fraction,
-            title=state + " % Power Produced From Renewables",
-        )
-        .mark_line()
-        .encode(
-            x=alt.X('year', title='year'),
-            y=alt.Y(state, title=' % Power Produced From Renewables', scale=alt.Scale(domain=[0, 100])),
-            # y = alt.Y('count()', scale=alt.Scale(domain=[0, 120]),
-            # color = alt.Color('blue')
-        )
-        # .mark_rule(color='red').encode(y=alt.datum(1))
-        # .mark_rule(color='red').encode(y=alt.datum(state_potential_dict[state]['solar_potential']))
-    )
-    # make new data frame for predicted renewable generation from 2020 to 2050
     pred_percent_df = pd.DataFrame({
         'year': future_years,
-        # 'Predicted Percent Power From Renewables': smooth2(future_years, renewable_energy_fraction[state]) })
-         # multiply by 100.0 to go from fraction to %
         'Predicted Percent Power From Renewables': 100.0 * renewable_fraction_forecast(state, renewable_energy_fraction, coal_gen, oil_gen, nat_gas_gen,
                                                                 wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen,
                                                                 renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen))})
+    state_goals_df = get_renewable_goals(state, state_goals)
 
-    pred_percent_chart = (  # historical generation fit chart
-        alt.Chart(pred_percent_df).mark_line(clip=True, color='blue', strokeDash=[2, 6], size=2).encode(
-            x='year',
-            y='Predicted Percent Power From Renewables',
-        )
-    )
-    state_goals_chart = (  # put state % renewable goals on the same chart.
+    two_subplot_fig = plt.figure(figsize=(6,8))
+    two_subplot_fig.tight_layout()
+    # two_subplot_fig.add_axes([0.1, 0.1, 0.6, 0.75])
 
-        alt.Chart(get_renewable_goals(state, state_goals)).mark_point(shape='circle', color='green', size=25).encode(
-            x='year',
-            y='goal'
-        )
-    )
+    plt.subplot(211)
+    plt.subplots_adjust(hspace=0.5)
+    plt.plot(historical_gen['year'], historical_gen[state], color='tab:green', label="From Renewables")
+    plt.plot(hgf_df['year'], hgf_df['Predicted Renewable Generation'], color='tab:green', linestyle='dashed', label="Forecast")
+    plt.plot(sp_df['year'], sp_df['Solar Potential'], color='tab:orange', linestyle='dashed', label="Solar Potential")
+    plt.plot(wp_df['year'], wp_df['Wind Potential'], color='tab:blue', linestyle='dashed', label="Wind Potential")
+    # plt.plot(t2, f(t2), color='black', marker='.')
+    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    plt.title(state + " Power Produced From Renewables")
+    plt.xlabel("Year")
+    plt.xlim([1960, 2050])
+    plt.ylabel("GWh")
+    plt.yscale('log')
+    plt.grid(axis = 'y')
 
-    st.altair_chart(renewable_fraction_chart + pred_percent_chart + state_goals_chart, use_container_width=True)
+    plt.subplot(212)
+    plt.subplots_adjust(hspace=0.5)
+    #plt.plot(t2, np.cos(2*np.pi*t2), color='tab:orange', linestyle='--', marker='.')
+    plt.ylim(0, 100) # fix y axis range from 0 to 100 %
+    plt.plot(renewable_energy_fraction['year'], renewable_energy_fraction[state], color='#054907', label="Historical Data")
+    plt.plot(pred_percent_df['year'], pred_percent_df['Predicted Percent Power From Renewables'], color='#054907', linestyle='dashed', label="Forecast")
+    plt.plot(state_goals_df['year'], state_goals_df['goal'], '*', color='tab:red', markersize=11, label="State Goal")
+    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    plt.title(state + " % Of Total Power From Renewables")
+    plt.xlabel("Year")
+    plt.xlim([1960, 2050])
+    plt.ylabel("%")
+    plt.grid(axis = 'y')
 
-    st.markdown(get_goal_details(state, state_goals))
+    st.pyplot(two_subplot_fig)
+    # # Define some CSS to control our custom labels
+    # css = '''
+    # table
+    # {
+    # border-collapse: collapse;
+    # }
+    # th
+    # {
+    # color: #ffffff;
+    # background-color: #000000;
+    # }
+    # td
+    # {
+    # background-color: #cccccc;
+    # }
+    # table, th, td
+    # {
+    # font-family:Arial, Helvetica, sans-serif;
+    # border: 1px solid black;
+    # text-align: right;
+    # }
+    # '''
+
+    # for axes in two_subplot_fig.axes:
+    #     for line in axes.get_lines():
+    #         xy_data = line.get_xydata()
+    #         labels = []
+    #         for x,y in xy_data:
+    #             html_label = f'<table border="1" class="dataframe"> <thead> <tr style="text-align: right;"> </thead> <tbody> <tr> <th>x</th> <td>{x}</td> </tr> <tr> <th>y</th> <td>{y}</td> </tr> </tbody> </table>'
+    #             labels.append(html_label)
+    #         tooltip = plugins.PointHTMLTooltip(line, labels, css=css)
+    #         plugins.connect(two_subplot_fig, tooltip)
+
+    # fig_html = mpld3.fig_to_html(two_subplot_fig)
+    # components.html(fig_html, height=300, width=1500) # need to figure out how to resize the figure.
+
+    ########################## End example code for matplot lib #############################################################
+#     historical_gen_chart = (
+#         alt.Chart(
+#             data=historical_gen,
+#             title=state + " Power Produced From Renewables ",
+#         )
+#         .mark_line()
+#         .encode(
+#             # x=alt.X("capacity 1", axis=alt.Axis(title="Capacity 1")),
+#             # x=alt.X("capacity 2", axis=alt.Axis(title="Capacity 2")),
+#             x=alt.X('year', title='year'),
+#             y=alt.Y(state, title='GWh'),
+#             # color = alt.Color('blue')
+#         )
+#         # .mark_rule(color='red').encode(y=alt.datum(1))
+#         # .mark_rule(color='red').encode(y=alt.datum(state_potential_dict[state]['solar_potential']))
+#     )
+
+#     # make new data frame for predicted renewable generation from 2020 to 2050
+#     future_years = list(range(2020, 2051))
+#     hgf_df = pd.DataFrame({
+#         'year': future_years,
+#         # 'Predicted Renewable Generation': smooth2(future_years, historical_gen[state]) })
+#         'Predicted Renewable Generation': renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen)})
+
+#     hgf_chart = (  # historical generation fit chart
+#         alt.Chart(hgf_df).mark_line(color='blue', strokeDash=[2, 6], size=2).encode(
+#             x='year',
+#             y='Predicted Renewable Generation',
+#         )
+#     )
+
+#     sp_df = pd.DataFrame({
+#         'Solar Potential': [state_potential_dict[state]['solar_potential']] * len(list(range(1960, 2051))),
+#         'year': list(range(1960, 2051))})
+
+#     #  solar_potential_line = alt.Chart(sp_df).mark_line(color= 'red').encode(
+#     solar_potential_line = alt.Chart(sp_df).mark_line(color='red', strokeDash=[12, 6], size=2).encode(
+#         x='year',
+#         y='Solar Potential',
+#         # color = alt.Color('red')
+#         # .mark_text(text='doubles every 2 days', angle=0)
+#     )
+
+#     # # This needs to correspond to a df with only 1 coordinate, not sp_df
+#     # solar_potential_text = alt.Chart(sp_df).mark_text(text= state + ' Maximum Solar Potential', color = 'red', angle=0).encode(
+#     # x= 'year',
+#     # y= 'Solar Potential',
+#     # #color = alt.Color('red')
+#     # # .mark_text(text='doubles every 2 days', angle=0)
+#     # )
+
+#     wp_df = pd.DataFrame({
+#         'Wind Potential': [state_potential_dict[state]['wind_potential']] * len(list(range(1960, 2051))),
+#         'year': list(range(1960, 2051))})
+
+#     wind_potential_line = alt.Chart(wp_df).mark_line(color='green', strokeDash=[12, 6], size=2).encode(
+#         x='year',
+#         y='Wind Potential',
+#     )
+#     st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + wind_potential_line, use_container_width=True)
+
+#     # st.altair_chart(historical_gen_chart + hgf_chart + solar_potential_line + solar_potential_text + wind_potential_line)
+
+#     # Now try to make a second chart here:
+
+#     # chart_data = pd.DataFrame(
+#     #     {'Resource Type': ["Solar", "Wind", "Hydro"], 'LCOE': np.random.randint(130, size=3)})
+#     # st.write("Levelized Cost of Energy (lifetime cost/lifetime output")
+#     # st.bar_chart(chart_data, x='Resource Type', y='LCOE')
+# #with col2:
+#     renewable_fraction_chart = (
+#         alt.Chart(
+#             data=renewable_energy_fraction,
+#             title=state + " % Power Produced From Renewables",
+#         )
+#         .mark_line()
+#         .encode(
+#             x=alt.X('year', title='year'),
+#             y=alt.Y(state, title=' % Power Produced From Renewables', scale=alt.Scale(domain=[0, 100])),
+#             # y = alt.Y('count()', scale=alt.Scale(domain=[0, 120]),
+#             # color = alt.Color('blue')
+#         )
+#         # .mark_rule(color='red').encode(y=alt.datum(1))
+#         # .mark_rule(color='red').encode(y=alt.datum(state_potential_dict[state]['solar_potential']))
+#     )
+#     # make new data frame for predicted renewable generation from 2020 to 2050
+#     pred_percent_df = pd.DataFrame({
+#         'year': future_years,
+#         # 'Predicted Percent Power From Renewables': smooth2(future_years, renewable_energy_fraction[state]) })
+#          # multiply by 100.0 to go from fraction to %
+#         'Predicted Percent Power From Renewables': 100.0 * renewable_fraction_forecast(state, renewable_energy_fraction, coal_gen, oil_gen, nat_gas_gen,
+#                                                                 wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen,
+#                                                                 renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen))})
+
+#     pred_percent_chart = (  # historical generation fit chart
+#         alt.Chart(pred_percent_df).mark_line(clip=True, color='blue', strokeDash=[2, 6], size=2).encode(
+#             x='year',
+#             y='Predicted Percent Power From Renewables',
+#         )
+#     )
+#     state_goals_chart = (  # put state % renewable goals on the same chart.
+
+#         alt.Chart(get_renewable_goals(state, state_goals)).mark_point(shape='circle', color='green', size=25).encode(
+#             x='year',
+#             y='goal'
+#         )
+#     )
+
+    # st.altair_chart(renewable_fraction_chart + pred_percent_chart + state_goals_chart, use_container_width=True)
+
+    # st.markdown(get_goal_details(state, state_goals))
 
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
