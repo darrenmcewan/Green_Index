@@ -117,17 +117,23 @@ with col3:
 
 countries = ['USA']
 
-with open('data/states.txt', 'r') as f:
-    lines = f.readlines()
+st.cache_data()
+def state_data():
+    with open('data/states.txt', 'r') as f:
+        lines = f.readlines()
 
-states = {}
-statesBounding = {}
-for line in lines:
-    state_data = line.strip().split(': ')
-    abbr, name = state_data[0], state_data[1].split(':')[0]
-    values = [float(x) for x in state_data[2][1:-1].split(', ')]
-    states[abbr] = name
-    statesBounding[abbr] = values
+    states = {}
+    statesBounding = {}
+    for line in lines:
+        state_data = line.strip().split(': ')
+        abbr, name = state_data[0], state_data[1].split(':')[0]
+        values = [float(x) for x in state_data[2][1:-1].split(', ')]
+        states[abbr] = name
+        statesBounding[abbr] = values
+
+    return states, statesBounding
+
+states, statesBounding = state_data()
 
 # Construct a dictionary of calculated wind and solar potential for each state:
 state_potential_dict = {}
