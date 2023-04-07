@@ -101,21 +101,8 @@ biomass_for_biofuels_gen['year'] = years_before_forecast
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.write("Wind")
-    image = Image.open("images/wind.JPG")
-    st.image(image)
-with col2:
-    st.write("Hydro")
-    image = Image.open("images/hydro.JPG")
-    st.image(image)
-with col3:
-    st.write("Solar")
-    image = Image.open("images/solar.JPG")
-    st.image(image)
 
-countries = ['USA']
+
 
 st.cache_data()
 def state_data():
@@ -175,19 +162,19 @@ with st.sidebar.container():
         unsafe_allow_html=True,
     )
 
-    st.selectbox("Country", countries, help="Only the United States is currently supported")
     state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
     energy_type = st.selectbox("Renewable Energy Type", energytype,
                                help="Select an energy type you would like displayed")
 
 
+
 ## MAP
 
 
-options = st.multiselect(
+options = st.selectbox(
     'View current renewable energy locations and/or heatmap of totla MW in the US',
-    ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh', 'Heatmap of Wind Generation Potential MWh'],
-    ['Renewable Energy Locations'])
+    ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh', 'Heatmap of Wind Generation Potential MWh'])
+
 
 col1, col2 = st.columns(2)
 with col1:
@@ -242,8 +229,8 @@ with col1:
 
         for location in locations:
             folium.CircleMarker(location, radius=4, color='#5A5A5A', fill_color=color).add_to(m)
-
-    output = st_folium(m, key="init", width=600, height=600)
+    m.to_streamlit()
+    #output = st_folium(m, key="init", width=600, height=600)
 
 
 labels = ['Wind', 'Solar', 'Hydroelectric']
@@ -474,19 +461,4 @@ with col2:
 
     # st.markdown(get_goal_details(state, state_goals))
 
-col1, col2, col3 = st.columns([1,2,1])
-with col2:
-    st.markdown(f"## Incentives for renewable energy in {state}:")
-    incentives = scripts.state_incentives.show_resources(state)
-    hide_table_row_index = """
-                <style>
-                thead tr th:first-child {display:none}
-                tbody th {display:none}
-                </style>
-                """
 
-    # Inject CSS with Markdown
-    st.markdown(hide_table_row_index, unsafe_allow_html=True)
-    st.write(incentives, unsafe_allow_html=True)
-
-# https://stackoverflow.com/questions/69409255/how-to-get-city-state-and-country-from-a-list-of-latitude-and-longitude-coordi#

@@ -1,15 +1,9 @@
 import streamlit as st
-
 import scripts.state_incentives
 
 
 st.set_page_config(page_title="State Renewable Incentive", page_icon="📈")
 
-st.markdown("# Renewable Resource Incentive")
-st.sidebar.header("State Incentives")
-st.write(
-    """Below is a list of incentives for various states in order to adopt renewable resources"""
-)
 with open('data/states.txt', 'r') as f:
     lines = f.readlines()
 
@@ -22,9 +16,17 @@ for line in lines:
     states[abbr] = name
     statesBounding[abbr] = values
 
+st.markdown("# Renewable Resource Incentive")
+st.sidebar.header("State Incentives")
+state = st.sidebar.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
+st.write(
+    """Below is a list of incentives for various states in order to adopt renewable resources"""
+)
 
 
-state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
+
+
+
 st.markdown(f"## Incentives for renewable energy in {state}:")
 incentives = scripts.state_incentives.show_resources(state)
 hide_table_row_index = """
