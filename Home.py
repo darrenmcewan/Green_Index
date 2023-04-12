@@ -1,7 +1,5 @@
 import streamlit as st
 from PIL import Image
-import base64
-from pathlib import Path
 
 st.set_page_config(
     page_title="Hello",
@@ -15,7 +13,6 @@ st.subheader("Making Informed Decisions by Visualizing, Exploring, and Evaluatin
 
 
 st.sidebar.success("Select a page above.")
-st.sidebar.image('images/renewable.gif')
 st.sidebar.write("[Contact Us](mailto:support@greensolution.com)")
 
 st.markdown(
