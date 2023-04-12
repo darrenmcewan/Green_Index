@@ -1,5 +1,13 @@
-View [here](https://greenindex.streamlit.app/)
+# View the project at [greenindex.streamlit.app](https://greenindex.streamlit.app/)
 
-README in progress 
+# To run locally: 
+1. Clone Github Repo
+`git clone https://github.com/darrenmcewan/Wind_visualization`
+2. Install the dependencies by running:
+`pip install -r requirements.txt`
+3. Run the Streamlit app by running:
+`streamlit run Home.py
+4. Open your web browser and go to the following URL:
+http://localhost:8501
 
-![image](https://user-images.githubusercontent.com/63265943/227366976-202a7563-e86e-4d39-b819-f33aaeb36674.png)
+You should see the Streamlit app running in your web browser.
