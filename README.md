@@ -11,3 +11,19 @@
 http://localhost:8501
 
 You should see the Streamlit app running in your web browser.
+
+# Navigation
+
+## ♻️ Renewable Resources
+### Folium Leafmap 
+View all existing renewable energy locations for the US or filter by state and energy type
+
+### State Renewable Energy Charts
+1. State by state data on existing power produced from renewable energy vs state potential energy from solar and wind
+2. Chart showing the current state % of total power from renewables with forecast of future energy. If a state has set a goal, it will be shown
+
+## 📈 State Incentives
+View a list of available incentives for a specific state in order to adopt renewable resources
+
+## 📄 Project Proposal
+Download our project research paper and view our report video
