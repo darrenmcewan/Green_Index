@@ -16,7 +16,9 @@ You should see the Streamlit app running in your web browser.
 
 ## ♻️ Renewable Resources
 ### Folium Leafmap 
-View all existing renewable energy locations for the US or filter by state and energy type
+1. View all existing renewable energy locations for the US or filter by state and energy type
+2. Add a heatmap to showcase solar and wind potential energy
+
 
 ### State Renewable Energy Charts
 1. State by state data on existing power produced from renewable energy vs state potential energy from solar and wind
