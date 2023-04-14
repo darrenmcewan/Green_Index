@@ -190,7 +190,6 @@ with col1:
         m.zoom_to_bounds(statesBounding[state])
 
     folium.TileLayer('openstreetmap').add_to(m)
-    folium.TileLayer('cartodbpositron').add_to(m)
     if "Heatmap of Solar Generation Potential MWh" in options:
         folium.Choropleth(
             geo_data=geojson,
@@ -217,6 +216,13 @@ with col1:
     folium.LayerControl(collapsed=False).add_to(m)
 
     if "Renewable Energy Locations" in options:
+        if energy_type=="Solar":
+            icon = folium.Icon(icon='fa-solid fa-solar-panel', prefix='fa')
+        elif energy_type=="Wind":
+            icon = folium.Icon(icon='fa-solid fa-wind-turbine', prefix='fa')
+        elif energy_type == "Hydroelectric":
+            icon = folium.Icon(icon='fa-solid fa-faucet-drip')
+
         if state == 'AK':
             data = data[data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
             color = "#76c893"
@@ -225,10 +231,18 @@ with col1:
             colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Hydroelectric": "#118ab2"}
             color = colors[energy_type]
 
-        locations = data[["Latitude", "Longitude"]].values.tolist()
+        locations = data[["Latitude", "Longitude", "Utility_Name"]].values.tolist()
+
 
         for location in locations:
-            folium.CircleMarker(location, radius=4, color='#5A5A5A', fill_color=color).add_to(m)
+            if energy_type == "Solar":
+                icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
+            elif energy_type == "Wind":
+                icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
+            elif energy_type == "Hydroelectric":
+                icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
+            folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
+
     m.to_streamlit()
     #output = st_folium(m, key="init", width=600, height=600)
 
