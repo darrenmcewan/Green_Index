@@ -19,14 +19,6 @@ from scripts.eddies_functions import *
 from scripts.existing_resources import *
 
 
-st.markdown("""
-            <style>
-            .css-15zrgzn {display: none}
-            .css-eczf16 {display: none}
-            .css-jn99sy {display: none}
-            </style>
-            """, unsafe_allow_html=True)
-
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 # DATA
 resources = ['Hydroelectric', 'Solar', 'Wind']
@@ -110,7 +102,13 @@ biomass_for_biofuels_gen['year'] = years_before_forecast
 original_title = '<h1 style=color:green>The Green Solution</h1>'
 st.markdown(original_title, unsafe_allow_html=True)
 
-
+st.markdown("""
+            <style>
+            .css-15zrgzn {display: none}
+            .css-eczf16 {display: none}
+            .css-jn99sy {display: none}
+            </style>
+            """, unsafe_allow_html=True)
 
 
 st.cache_data()
