@@ -18,6 +18,15 @@ import scripts.state_incentives
 from scripts.eddies_functions import *
 from scripts.existing_resources import *
 
+
+st.markdown("""
+            <style>
+            .css-15zrgzn {display: none}
+            .css-eczf16 {display: none}
+            .css-jn99sy {display: none}
+            </style>
+            """, unsafe_allow_html=True)
+
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 # DATA
 resources = ['Hydroelectric', 'Solar', 'Wind']
