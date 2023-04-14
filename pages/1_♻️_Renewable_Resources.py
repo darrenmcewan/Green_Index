@@ -107,7 +107,7 @@ st.markdown("""
             .css-15zrgzn {display: none}
             .css-eczf16 {display: none}
             .css-jn99sy {display: none}
-             button[title="View fullscreen"]{visibility: visible;}
+             button[title="View fullscreen"]{opacity: 1; transform: scale(1);}
             </style>
             """, unsafe_allow_html=True)
 
