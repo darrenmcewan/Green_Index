@@ -163,7 +163,7 @@ with st.sidebar.container():
     )
 
     state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
-    energy_type = st.selectbox("Renewable Energy Type", energytype,
+    energy_type = st.selectbox("Renewable Energy Type", ['All']+energytype,
                                help="Select an energy type you would like displayed")
 
 
@@ -216,32 +216,36 @@ with col1:
     folium.LayerControl(collapsed=False).add_to(m)
 
     if "Renewable Energy Locations" in options:
-        if energy_type=="Solar":
-            icon = folium.Icon(icon='fa-solid fa-solar-panel', prefix='fa')
-        elif energy_type=="Wind":
-            icon = folium.Icon(icon='fa-solid fa-wind-turbine', prefix='fa')
-        elif energy_type == "Hydroelectric":
-            icon = folium.Icon(icon='fa-solid fa-faucet-drip')
+
 
         if state == 'AK':
             data = data[data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
             color = "#76c893"
         else:
-            data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
+            data = data[(data["StateName"] == states[state]) & data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
             colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Hydroelectric": "#118ab2"}
-            color = colors[energy_type]
 
-        locations = data[["Latitude", "Longitude", "Utility_Name"]].values.tolist()
+        locations = data[["Latitude", "Longitude", "Utility_Name", "PrimSource"]].values.tolist()
+        if energy_type == 'All':
 
-
-        for location in locations:
-            if energy_type == "Solar":
-                icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
-            elif energy_type == "Wind":
-                icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
-            elif energy_type == "Hydroelectric":
-                icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
-            folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
+            for location in locations:
+                if location[3] == "Solar":
+                    icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
+                elif location[3] == "Wind":
+                    icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
+                elif location[3] == "Hydroelectric":
+                    icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
+                folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
+        else:
+            data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
+            for location in locations:
+                if energy_type == "Solar":
+                    icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
+                elif energy_type == "Wind":
+                    icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
+                elif energy_type == "Hydroelectric":
+                    icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
+                folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
 
     m.to_streamlit()
     #output = st_folium(m, key="init", width=600, height=600)
