@@ -178,76 +178,81 @@ options = st.selectbox(
 
 col1, col2 = st.columns(2)
 with col1:
-    m = foliumap.Map(
-        location=[40.580585, -95.779294],
-        zoom_start=3.3,
-        control_scale=False,
-        tiles=None,
-        attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-    )
+    with st.spinner('Visualization Loading'):
 
-    if state != 'AK':
-        m.zoom_to_bounds(statesBounding[state])
+        m = foliumap.Map(
+            location=[40.580585, -95.779294],
+            zoom_start=3.3,
+            control_scale=False,
+            tiles=None,
+            attr='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+        )
 
-    folium.TileLayer('openstreetmap').add_to(m)
-    if "Heatmap of Solar Generation Potential MWh" in options:
-        folium.Choropleth(
-            geo_data=geojson,
-            data=sw_data,
-            columns=['fips', 'solar_sum'],
-            key_on = 'feature.properties.cnty_code2',
-            fill_color='YlOrRd',
-            nan_fill_color="white",  # Use white color if there is no data available for the county
-            fill_opacity=0.7,
-            line_opacity=0.3,
-            legend_name="Solar Potential").add_to(m)
+        if state != 'AK':
+            m.zoom_to_bounds(statesBounding[state])
 
-    if "Heatmap of Wind Generation Potential MWh" in options:
-        folium.Choropleth(
-            geo_data=geojson,
-            data=sw_data,
-            columns=['fips', 'dist_wind_'],
-            key_on='feature.properties.cnty_code2',
-            fill_color='BuPu',
-            nan_fill_color="white",  # Use white color if there is no data available for the county
-            fill_opacity=0.7,
-            line_opacity=0.3,
-            legend_name="Wind Potential").add_to(m)
-    folium.LayerControl(collapsed=False).add_to(m)
+        folium.TileLayer('openstreetmap').add_to(m)
+        if "Heatmap of Solar Generation Potential MWh" in options:
+            folium.Choropleth(
+                geo_data=geojson,
+                data=sw_data,
+                columns=['fips', 'solar_sum'],
+                key_on = 'feature.properties.cnty_code2',
+                fill_color='YlOrRd',
+                nan_fill_color="white",  # Use white color if there is no data available for the county
+                fill_opacity=0.7,
+                line_opacity=0.3,
+                legend_name="Solar Potential").add_to(m)
 
-    if "Renewable Energy Locations" in options:
+        if "Heatmap of Wind Generation Potential MWh" in options:
+            folium.Choropleth(
+                geo_data=geojson,
+                data=sw_data,
+                columns=['fips', 'dist_wind_'],
+                key_on='feature.properties.cnty_code2',
+                fill_color='BuPu',
+                nan_fill_color="white",  # Use white color if there is no data available for the county
+                fill_opacity=0.7,
+                line_opacity=0.3,
+                legend_name="Wind Potential").add_to(m)
+        folium.LayerControl(collapsed=False).add_to(m)
+
+        if "Renewable Energy Locations" in options:
 
 
-        if state == 'AK':
-            data = data[data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
-            color = "#76c893"
-        else:
-            data = data[(data["StateName"] == states[state]) & data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
-            colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Hydroelectric": "#118ab2"}
+            if state == 'AK':
+                data = data[data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
+                color = "#76c893"
+            else:
+                data = data[(data["StateName"] == states[state]) & data["PrimSource"].isin(['Wind', 'Solar','Hydroelectric'])]
+                colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Hydroelectric": "#118ab2"}
 
-        locations = data[["Latitude", "Longitude", "Utility_Name", "PrimSource"]].values.tolist()
-        if energy_type == 'All':
+            locations = data[["Latitude", "Longitude", "Utility_Name", "PrimSource"]].values.tolist()
+            if energy_type == 'All':
 
-            for location in locations:
-                if location[3] == "Solar":
-                    icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
-                elif location[3] == "Wind":
-                    icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
-                elif location[3] == "Hydroelectric":
-                    icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
-                folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
-        else:
-            data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
-            for location in locations:
-                if energy_type == "Solar":
-                    icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
-                elif energy_type == "Wind":
-                    icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
-                elif energy_type == "Hydroelectric":
-                    icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
-                folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
+                for location in locations:
+                    if location[3] == "Solar":
+                        icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
+                    elif location[3] == "Wind":
+                        icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
+                    elif location[3] == "Hydroelectric":
+                        icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
+                    folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
+            else:
+                data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
+                for location in locations:
+                    if energy_type == "Solar":
+                        icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
+                    elif energy_type == "Wind":
+                        icon = folium.features.CustomIcon('images/wind.png', icon_size=(20, 20))
+                    elif energy_type == "Hydroelectric":
+                        icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
+                    folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
 
-    m.to_streamlit()
+        m.to_streamlit()
+    st.success("Map Loaded")
+
+
     #output = st_folium(m, key="init", width=600, height=600)
 
 
@@ -277,59 +282,60 @@ with col2:
     import numpy as np
     from mpld3 import plugins
     import streamlit.components.v1 as components
+    if energy_type != 'All':
     
-    # Redefine dataframes to be plotted each time a new state is selected
-    future_years = list(range(2020, 2051))
-    hgf_df = pd.DataFrame({
-        'year': future_years,
-        'Predicted Renewable Generation': renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen)})
-    sp_df = pd.DataFrame({
-        'Solar Potential': list(state_sw_potential['solar_sum (GWh)'][state_sw_potential['state_name'] == state])*len(list(range(1960, 2051))), 
-        'year': list(range(1960, 2051))})
-    wp_df = pd.DataFrame({
-        'Wind Potential': list(state_sw_potential['dist_wind_ (GWh)'][state_sw_potential['state_name'] == state])*len(list(range(1960, 2051))),
-        'year': list(range(1960, 2051))})
-    pred_percent_df = pd.DataFrame({
-        'year': future_years,
-        'Predicted Percent Power From Renewables': 100.0 * renewable_fraction_forecast(state, renewable_energy_fraction, coal_gen, oil_gen, nat_gas_gen,
-                                                                wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen,
-                                                                renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen))})
-    state_goals_df = get_renewable_goals(state, state_goals)
+        # Redefine dataframes to be plotted each time a new state is selected
+        future_years = list(range(2020, 2051))
+        hgf_df = pd.DataFrame({
+            'year': future_years,
+            'Predicted Renewable Generation': renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen)})
+        sp_df = pd.DataFrame({
+            'Solar Potential': list(state_sw_potential['solar_sum (GWh)'][state_sw_potential['state_name'] == state])*len(list(range(1960, 2051))),
+            'year': list(range(1960, 2051))})
+        wp_df = pd.DataFrame({
+            'Wind Potential': list(state_sw_potential['dist_wind_ (GWh)'][state_sw_potential['state_name'] == state])*len(list(range(1960, 2051))),
+            'year': list(range(1960, 2051))})
+        pred_percent_df = pd.DataFrame({
+            'year': future_years,
+            'Predicted Percent Power From Renewables': 100.0 * renewable_fraction_forecast(state, renewable_energy_fraction, coal_gen, oil_gen, nat_gas_gen,
+                                                                    wood_and_waste_gen, nuclear_gen, biomass_for_biofuels_gen,
+                                                                    renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen, geothermal_gen))})
+        state_goals_df = get_renewable_goals(state, state_goals)
 
-    two_subplot_fig = plt.figure(figsize=(6,8))
-    two_subplot_fig.tight_layout()
-    # two_subplot_fig.add_axes([0.1, 0.1, 0.6, 0.75])
+        two_subplot_fig = plt.figure(figsize=(6,8))
+        two_subplot_fig.tight_layout()
+        # two_subplot_fig.add_axes([0.1, 0.1, 0.6, 0.75])
 
-    plt.subplot(211)
-    plt.subplots_adjust(hspace=0.5)
-    plt.plot(historical_gen['year'], historical_gen[state], color='tab:green', label="From Renewables")
-    plt.plot(hgf_df['year'], hgf_df['Predicted Renewable Generation'], color='tab:green', linestyle='dashed', label="Forecast")
-    plt.plot(sp_df['year'], sp_df['Solar Potential'], color='tab:orange', linestyle='dashed', label="Solar Potential")
-    plt.plot(wp_df['year'], wp_df['Wind Potential'], color='tab:blue', linestyle='dashed', label="Wind Potential")
-    # plt.plot(t2, f(t2), color='black', marker='.')
-    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-    plt.title(state + " Power Produced From Renewables")
-    plt.xlabel("Year")
-    plt.xlim([1960, 2050])
-    plt.ylabel("GWh")
-    plt.yscale('log')
-    plt.grid(axis = 'y')
+        plt.subplot(211)
+        plt.subplots_adjust(hspace=0.5)
+        plt.plot(historical_gen['year'], historical_gen[state], color='tab:green', label="From Renewables")
+        plt.plot(hgf_df['year'], hgf_df['Predicted Renewable Generation'], color='tab:green', linestyle='dashed', label="Forecast")
+        plt.plot(sp_df['year'], sp_df['Solar Potential'], color='tab:orange', linestyle='dashed', label="Solar Potential")
+        plt.plot(wp_df['year'], wp_df['Wind Potential'], color='tab:blue', linestyle='dashed', label="Wind Potential")
+        # plt.plot(t2, f(t2), color='black', marker='.')
+        plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+        plt.title(state + " Power Produced From Renewables")
+        plt.xlabel("Year")
+        plt.xlim([1960, 2050])
+        plt.ylabel("GWh")
+        plt.yscale('log')
+        plt.grid(axis = 'y')
 
-    plt.subplot(212)
-    plt.subplots_adjust(hspace=0.5)
-    #plt.plot(t2, np.cos(2*np.pi*t2), color='tab:orange', linestyle='--', marker='.')
-    plt.ylim(0, 100) # fix y axis range from 0 to 100 %
-    plt.plot(renewable_energy_fraction['year'], renewable_energy_fraction[state], color='#054907', label="Historical Data")
-    plt.plot(pred_percent_df['year'], pred_percent_df['Predicted Percent Power From Renewables'], color='#054907', linestyle='dashed', label="Forecast")
-    plt.plot(state_goals_df['year'], state_goals_df['goal'], '*', color='tab:red', markersize=11, label="State Goal")
-    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-    plt.title(state + " % Of Total Power From Renewables")
-    plt.xlabel("Year")
-    plt.xlim([1960, 2050])
-    plt.ylabel("%")
-    plt.grid(axis = 'y')
+        plt.subplot(212)
+        plt.subplots_adjust(hspace=0.5)
+        #plt.plot(t2, np.cos(2*np.pi*t2), color='tab:orange', linestyle='--', marker='.')
+        plt.ylim(0, 100) # fix y axis range from 0 to 100 %
+        plt.plot(renewable_energy_fraction['year'], renewable_energy_fraction[state], color='#054907', label="Historical Data")
+        plt.plot(pred_percent_df['year'], pred_percent_df['Predicted Percent Power From Renewables'], color='#054907', linestyle='dashed', label="Forecast")
+        plt.plot(state_goals_df['year'], state_goals_df['goal'], '*', color='tab:red', markersize=11, label="State Goal")
+        plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+        plt.title(state + " % Of Total Power From Renewables")
+        plt.xlabel("Year")
+        plt.xlim([1960, 2050])
+        plt.ylabel("%")
+        plt.grid(axis = 'y')
 
-    st.pyplot(two_subplot_fig)
+        st.pyplot(two_subplot_fig)
     # # Define some CSS to control our custom labels
     # css = '''
     # table
