@@ -69,7 +69,7 @@ def get_goal_details(state, state_goals):  # takes imported df of state_goals an
     if state_goals['state'].isin([state]).any():  # If the state_goals df contains the selected state
         # get the subset of the state_goals df for the state
         sg = state_goals[state_goals['state'] == state]
-        details = sg['details'].iloc[0]  # print this text below the state goals chart
+        details = state + ' goals: ' + sg['details'].iloc[0]  # print this text below the state goals chart
         if not isinstance(details, str):  # if nan set to empty sting
             details = ''
     else:
