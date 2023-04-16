@@ -222,9 +222,9 @@ with col1:
                     (data["StateName"] == states[state]) & data["PrimSource"].isin(['Wind', 'Solar', 'Hydroelectric'])]
                 colors = {"Wind": "#8d99ae", "Solar": "#ffd166", "Hydroelectric": "#118ab2"}
 
-            locations = data[["Latitude", "Longitude", "Utility_Name", "PrimSource"]].values.tolist()
-            if energy_type == 'All':
 
+            if energy_type == 'All':
+                locations = data[["Latitude", "Longitude", "Utility_Name", "PrimSource"]].values.tolist()
                 for location in locations:
                     if location[3] == "Solar":
                         icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
@@ -235,6 +235,7 @@ with col1:
                     folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
             else:
                 data = data[(data["StateName"] == states[state]) & (data["PrimSource"] == energy_type)]
+                locations = data[["Latitude", "Longitude", "Utility_Name", "PrimSource"]].values.tolist()
                 for location in locations:
                     if energy_type == "Solar":
                         icon = folium.features.CustomIcon('images/solar.png', icon_size=(20, 20))
