@@ -1,12 +1,14 @@
 import folium
+from folium import Choropleth
 import geopandas as gpd
 import leafmap.foliumap as foliumap
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
-
 from scripts.eddies_functions import *
 from scripts.existing_resources import *
+
+
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 # DATA
@@ -19,10 +21,11 @@ def getData():
     # Import df of state renewable energy goals (% from renewable sources)
     state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
     # Import df of solar & wind potential
-    sw_data = pd.read_csv('data/project_data_3.csv')
+    sw_data = pd.read_csv('data/project_data_4.csv')
     sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
+    sw_data['fips'] = sw_data['fips'].astype(str)
     # load in county geoJSON
-    geojson = gpd.read_file('data/county_reduced.geojson')
+    geojson = gpd.read_file('data/county_reduced_3.geojson')
     # Import historical renewable energy data and make dataframes
     historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
     # Imoport total energy production by state (including renewables and fossil fuels)
@@ -167,7 +170,7 @@ with st.sidebar.container():
 
 
 options = st.selectbox(
-    'View current renewable energy locations and/or heatmap of totla MW in the US',
+    'View current renewable energy locations and/or heatmap of total MW in the US',
     ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh',
      'Heatmap of Wind Generation Potential MWh'])
 
@@ -190,16 +193,6 @@ if 'about_rd_truth' not in st.session_state:
       \frac{\text{(non-combustible renewables)}}{\text{(non-combustible renewables)} + oil + coal + natural gas + nuclear + biomass}
       $
     """
-    # We use 2020 technical solar and wind potential data for NREL is defined as **_really_ cool**\
-    # Depicts estimated 2020 technical generation potential, by county, for  commercial photovoltaic,concentrating solar,\
-    #   distributed wind, land-based wind, residential photovoltaic, and\ utilityphotovoltaic technologies. \
-    #   Technical generation potential is the upper bound of generationbased on resource, system performance, \
-    #   topographic limitations, and environmental and land- use constraints, not market conditions.\
-    # We define renewable resources as power produced from non-combustible energy sources that do not emit CO2.\
-    # These sources include Solar, wind, geothermal, and hydroelectric power. \n Nuclear power is generally not considered a renewable resource.\
-    # % power from renewable sources is defined as $ % power from renewable sources = non-combustible renewables / (non-combustible renewables + oil + coal + natural gas + nuclear + biomass)$\
-    # '
-
     st.session_state['about_rd_truth'] = False # toggle true or false if button is clicked.
     st.session_state["about_rd_message"] = about_resource_data # display if button is clicked
 
@@ -275,7 +268,6 @@ with col1:
                     elif energy_type == "Hydroelectric":
                         icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
                     folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
-
         m.to_streamlit()
     st.success("Map Loaded")
 
@@ -373,8 +365,3 @@ with col2:
         helpful_message = 'Choose a state from the sidebar to view forecasted renewable energy potential'
 
         st.info(helpful_message, icon="ℹ")
-    
-    
-    
-
-        
