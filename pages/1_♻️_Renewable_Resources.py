@@ -1,4 +1,5 @@
 import folium
+from folium import Choropleth
 import geopandas as gpd
 import leafmap.foliumap as foliumap
 import matplotlib.pyplot as plt
@@ -20,11 +21,11 @@ def getData():
     # Import df of state renewable energy goals (% from renewable sources)
     state_goals = pd.read_csv('data/state_renewable_goals_2021.csv')
     # Import df of solar & wind potential
-    sw_data = pd.read_csv('data/project_data_3.csv')
+    sw_data = pd.read_csv('data/project_data_4.csv')
     sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
-    sw_data['fips'] = sw_data['fips'].astype(str)
+    #sw_data['fips'] = sw_data['fips'].astype(str)
     # load in county geoJSON
-    geojson = gpd.read_file('data/county_reduced.geojson')
+    geojson = gpd.read_file('data/county_reduced_3.geojson')
     # Import historical renewable energy data and make dataframes
     historical_gen_billion_Btu = pd.read_csv('data/historical_renewable_energy_production_by_state_in_billion_Btu.csv')
     # Imoport total energy production by state (including renewables and fossil fuels)
@@ -169,7 +170,7 @@ with st.sidebar.container():
 
 
 options = st.selectbox(
-    'View current renewable energy locations and/or heatmap of totla MW in the US',
+    'View current renewable energy locations and/or heatmap of total MW in the US',
     ['Renewable Energy Locations', 'Heatmap of Solar Generation Potential MWh',
      'Heatmap of Wind Generation Potential MWh'])
 
