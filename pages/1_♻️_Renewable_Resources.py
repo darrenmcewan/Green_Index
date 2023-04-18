@@ -23,7 +23,7 @@ def getData():
     # Import df of solar & wind potential
     sw_data = pd.read_csv('data/project_data_4.csv')
     sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
-    #sw_data['fips'] = sw_data['fips'].astype(str)
+    sw_data['fips'] = sw_data['fips'].astype(str)
     # load in county geoJSON
     geojson = gpd.read_file('data/county_reduced_3.geojson')
     # Import historical renewable energy data and make dataframes
