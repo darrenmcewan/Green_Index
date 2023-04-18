@@ -4,9 +4,10 @@ import leafmap.foliumap as foliumap
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
-
 from scripts.eddies_functions import *
 from scripts.existing_resources import *
+
+
 
 st.set_page_config(page_title="Streamlit Geospatial", layout="wide")
 # DATA
@@ -21,6 +22,7 @@ def getData():
     # Import df of solar & wind potential
     sw_data = pd.read_csv('data/project_data_3.csv')
     sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
+    sw_data['fips'] = sw_data['fips'].astype(str)
     # load in county geoJSON
     geojson = gpd.read_file('data/county_reduced.geojson')
     # Import historical renewable energy data and make dataframes
@@ -244,7 +246,6 @@ with col1:
                     elif energy_type == "Hydroelectric":
                         icon = folium.features.CustomIcon('images/hydro.png', icon_size=(20, 20))
                     folium.Marker(location=[location[0], location[1]], tooltip=location[2], icon=icon).add_to(m)
-
         m.to_streamlit()
     st.success("Map Loaded")
 
