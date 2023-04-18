@@ -96,7 +96,7 @@ st.markdown("""
             </style>
             """, unsafe_allow_html=True)
 
-st.cache_data()
+# st.cache_data()
 
 
 def state_data():
@@ -172,6 +172,37 @@ options = st.selectbox(
      'Heatmap of Wind Generation Potential MWh'])
 
 col1, col2 = st.columns(2)
+
+# make new session state variables for "About Resource Data" button.
+if 'about_rd_truth' not in st.session_state:
+    about_resource_data = r""" 
+    - Heatmaps and plots use 2020 county level technical resource potential data from [NREL](https://maps.nrel.gov/slope/data-viewer?layer=energy-generation)
+      Technical generation potential is the upper bound of power generation based on resource, system performance, topographic limitations,
+      and environmental and land-use constraints, not market conditions. 
+
+   - Statewide historical data from 1960-2020 was taken from [EIA](https://www.eia.gov/state/seds/seds-data-complete.php?sid=US#CompleteDataFile) and is used for plotting and forecasting up to the year 2050.
+      We define Power produced from renewables as power produced from non-combustible energy sources that do not emit CO2. These include:
+      Solar, wind, hydroelectric, and geothermal power.
+
+   - The Percent of total power from renewables is defined by the following expression:
+   
+      $
+      \frac{\text{(non-combustible renewables)}}{\text{(non-combustible renewables)} + oil + coal + natural gas + nuclear + biomass}
+      $
+    """
+    # We use 2020 technical solar and wind potential data for NREL is defined as **_really_ cool**\
+    # Depicts estimated 2020 technical generation potential, by county, for  commercial photovoltaic,concentrating solar,\
+    #   distributed wind, land-based wind, residential photovoltaic, and\ utilityphotovoltaic technologies. \
+    #   Technical generation potential is the upper bound of generationbased on resource, system performance, \
+    #   topographic limitations, and environmental and land- use constraints, not market conditions.\
+    # We define renewable resources as power produced from non-combustible energy sources that do not emit CO2.\
+    # These sources include Solar, wind, geothermal, and hydroelectric power. \n Nuclear power is generally not considered a renewable resource.\
+    # % power from renewable sources is defined as $ % power from renewable sources = non-combustible renewables / (non-combustible renewables + oil + coal + natural gas + nuclear + biomass)$\
+    # '
+
+    st.session_state['about_rd_truth'] = False # toggle true or false if button is clicked.
+    st.session_state["about_rd_message"] = about_resource_data # display if button is clicked
+
 with col1:
     with st.spinner('Visualization Loading'):
 
@@ -248,8 +279,20 @@ with col1:
         m.to_streamlit()
     st.success("Map Loaded")
 
+    # toggle the 'About Resource Data' message if button clicked.
+    if st.button('About Resource Data'): # if button clicked.
+        if st.session_state.about_rd_truth == False:
+            st.markdown(st.session_state.about_rd_message)
+            st.session_state["about_rd_truth"] = True
+        else:
+            st.markdown('')
+            st.session_state["about_rd_truth"] = False
+
+
 labels = ['Wind', 'Solar', 'Hydroelectric']
 colors = ['#8d99ae', '#ffd166', '#118ab2']
+
+
 
 with col2:
     if state != 'All':
@@ -258,7 +301,7 @@ with col2:
         hgf_df = pd.DataFrame({
             'year': future_years,
             'Predicted Renewable Generation': renewable_forecast(state, historical_gen, solar_gen, wind_gen, hydro_gen,
-                                                                 geothermal_gen)})
+                                                                geothermal_gen)})
         sp_df = pd.DataFrame({
             'Solar Potential': list(
                 state_sw_potential['solar_sum (GWh)'][state_sw_potential['state_name'] == state]) * len(
@@ -272,18 +315,18 @@ with col2:
         pred_percent_df = pd.DataFrame({
             'year': future_years,
             'Predicted Percent Power From Renewables': 100.0 * renewable_fraction_forecast(state,
-                                                                                           renewable_energy_fraction,
-                                                                                           coal_gen, oil_gen,
-                                                                                           nat_gas_gen,
-                                                                                           wood_and_waste_gen,
-                                                                                           nuclear_gen,
-                                                                                           biomass_for_biofuels_gen,
-                                                                                           renewable_forecast(state,
-                                                                                                              historical_gen,
-                                                                                                              solar_gen,
-                                                                                                              wind_gen,
-                                                                                                              hydro_gen,
-                                                                                                              geothermal_gen))})
+                                                                                        renewable_energy_fraction,
+                                                                                        coal_gen, oil_gen,
+                                                                                        nat_gas_gen,
+                                                                                        wood_and_waste_gen,
+                                                                                        nuclear_gen,
+                                                                                        biomass_for_biofuels_gen,
+                                                                                        renewable_forecast(state,
+                                                                                                            historical_gen,
+                                                                                                            solar_gen,
+                                                                                                            wind_gen,
+                                                                                                            hydro_gen,
+                                                                                                            geothermal_gen))})
         state_goals_df = get_renewable_goals(state, state_goals)
 
         two_subplot_fig = plt.figure(figsize=(6, 8))
@@ -293,9 +336,9 @@ with col2:
         plt.subplots_adjust(hspace=0.5)
         plt.plot(historical_gen['year'], historical_gen[state], color='tab:green', label="From Renewables")
         plt.plot(hgf_df['year'], hgf_df['Predicted Renewable Generation'], color='tab:green', linestyle='dashed',
-                 label="Forecast")
+                label="Forecast")
         plt.plot(sp_df['year'], sp_df['Solar Potential'], color='tab:orange', linestyle='dashed',
-                 label="Solar Potential")
+                label="Solar Potential")
         plt.plot(wp_df['year'], wp_df['Wind Potential'], color='tab:blue', linestyle='dashed', label="Wind Potential")
         plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
         plt.title(state + " Power Produced From Renewables")
@@ -309,11 +352,11 @@ with col2:
         plt.subplots_adjust(hspace=0.5)
         plt.ylim(0, 100)  # fix y axis range from 0 to 100 %
         plt.plot(renewable_energy_fraction['year'], renewable_energy_fraction[state], color='#054907',
-                 label="Historical Data")
+                label="Historical Data")
         plt.plot(pred_percent_df['year'], pred_percent_df['Predicted Percent Power From Renewables'], color='#054907',
-                 linestyle='dashed', label="Forecast")
+                linestyle='dashed', label="Forecast")
         plt.plot(state_goals_df['year'], state_goals_df['goal'], '*', color='tab:red', markersize=11,
-                 label="State Goal")
+                label="State Goal")
         plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
         plt.title(state + " % Of Total Power From Renewables")
         plt.xlabel("Year")
@@ -325,7 +368,13 @@ with col2:
 
         # Display info about state goals below chart
         st.markdown(get_goal_details(state, state_goals))
+
     else:
         helpful_message = 'Choose a state from the sidebar to view forecasted renewable energy potential'
 
         st.info(helpful_message, icon="ℹ")
+    
+    
+    
+
+        
