@@ -1,4 +1,3 @@
-# Testing!
 # View the project at [greenindex.streamlit.app](https://greenindex.streamlit.app/)
 
 # To run locally: 
