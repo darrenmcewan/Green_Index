@@ -162,7 +162,7 @@ with st.sidebar.container():
         unsafe_allow_html=True,
     )
 
-    state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=0)
+    state = st.selectbox("Find Renewable Energy Near You", states, help="Select a state to zoom in on", index=3)
 
     energy_type = st.selectbox("Renewable Energy Type", ['All'] + energytype,
                                help="Select an energy type you would like displayed")
