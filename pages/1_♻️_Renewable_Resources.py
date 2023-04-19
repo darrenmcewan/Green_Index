@@ -23,7 +23,8 @@ def getData():
     # Import df of solar & wind potential
     sw_data = pd.read_csv('data/project_data_4.csv')
     sw_data['solar_sum'] = sw_data[['util_pv_te', 'resid_pv_t', 'com_pv_tec']].astype(float).sum(1)
-    sw_data['fips'] = sw_data['fips'].astype(str)
+    sw_data['fips'] = sw_data['fips'].map(str)
+    sw_data['fips'] = sw_data['fips'].str.zfill(5)
     # load in county geoJSON
     geojson = gpd.read_file('data/county_reduced_3.geojson')
     # Import historical renewable energy data and make dataframes
@@ -178,17 +179,17 @@ col1, col2 = st.columns(2)
 
 # make new session state variables for "About Resource Data" button.
 if 'about_rd_truth' not in st.session_state:
-    about_resource_data = r""" 
+    about_resource_data = r"""
     - Heatmaps and plots use 2020 county level technical resource potential data from [NREL](https://maps.nrel.gov/slope/data-viewer?layer=energy-generation)
       Technical generation potential is the upper bound of power generation based on resource, system performance, topographic limitations,
-      and environmental and land-use constraints, not market conditions. 
+      and environmental and land-use constraints, not market conditions.
 
    - Statewide historical data from 1960-2020 was taken from [EIA](https://www.eia.gov/state/seds/seds-data-complete.php?sid=US#CompleteDataFile) and is used for plotting and forecasting up to the year 2050.
       We define Power produced from renewables as power produced from non-combustible energy sources that do not emit CO2. These include:
       Solar, wind, hydroelectric, and geothermal power.
 
    - The Percent of total power from renewables is defined by the following expression:
-   
+
       $
       \frac{\text{(non-combustible renewables)}}{\text{(non-combustible renewables)} + oil + coal + natural gas + nuclear + biomass}
       $
