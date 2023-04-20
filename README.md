@@ -2,7 +2,7 @@
 
 # To run locally: 
 1. Clone Github Repo
-`git clone https://github.com/darrenmcewan/Wind_visualization`
+`git clone https://github.com/darrenmcewan/Green_index`
 2. Install the dependencies by running:
 `pip install -r requirements.txt`
 3. Run the Streamlit app by running:
