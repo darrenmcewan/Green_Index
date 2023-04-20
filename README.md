@@ -4,7 +4,7 @@
 1. Clone Github Repo
 `git clone https://github.com/darrenmcewan/Green_index`
 2. Install the dependencies by running:
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 3. Run the Streamlit app by running:
 `streamlit run Home.py`
 4. Open your web browser and go to the following URL:
