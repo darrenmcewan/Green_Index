@@ -1,6 +1,7 @@
 # View the project at [greenindex.streamlit.app](https://greenindex.streamlit.app/)
 
-#Description
+# Description 
+
 The app provides an interactive map showing solar and wind resource potential, historical data on the total power generated from renewable sources (including solar, wind, hydroelectric and geothermal power), as well as information on incentives specific to each state. The app uses an exponential smoothing algorithm with additive trend and damping factor, but without seasonality to forecast percent of RES utilization by 2050. 
 
 [Instructional video on how to run and use the app](https://youtu.be/jH-BRXnBOWs)
